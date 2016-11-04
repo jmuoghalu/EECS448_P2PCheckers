@@ -275,6 +275,12 @@ public class CheckerBoardState {
         return true;
     }
 
+    /**
+       Get the square between a double jump move. If this is not a
+       double jump move, it will just return the starting square.
+       @param move The move to check for.
+       @return The middle square
+     */
     public CheckerSquare getMiddleSquare(CheckerMove move) {
         int dx = move.getEnd().getX() - move.getStart().getX();
         int dy = move.getEnd().getY() - move.getStart().getY();
