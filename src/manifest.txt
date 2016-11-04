@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
 Created-By: 1.0
-Main-Class: GameBoardAlternate
+Main-Class: com.groupone.p2pgame.CheckerBoardAlternate
