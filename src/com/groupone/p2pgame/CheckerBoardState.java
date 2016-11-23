@@ -87,7 +87,8 @@ public class CheckerBoardState {
        pieces and they are in the home rows.
        @return The state of the board in the starting configuration.
      */
-    public static CheckerBoardState getStartingBoard() {
+    public static CheckerBoardState getStartingBoard()
+    {
         // original locations for pieces in top half of board
         int[] playerOneLocations = new int[] {1, 3, 5, 7, 8, 10, 12, 14, 17, 19, 21, 23};
 
@@ -114,27 +115,37 @@ public class CheckerBoardState {
     /**
        Initialize the checker board with no pieces.
      */
-    public CheckerBoardState () {
+    public CheckerBoardState()
+    {
         this.squares = new CheckerSquare[64];
-        for (int index = 0; index < this.squares.length; index++) {
+        for (int index = 0; index < this.squares.length; index++)
+        {
             this.squares[index] = new CheckerSquare(index);
         }
     }
+
+
+
 
     /**
        Get all 64 squares in one array.
        @return All of the squares
     */
-    public CheckerSquare[] getSquares() {
+    public CheckerSquare[] getSquares()
+    {
         return this.squares;
     }
+
+
+
 
     /**
        Get the square at the index.
        @param index The index to use to lookup.
        @return The checker square at that index.
     */
-    public CheckerSquare getSquare(int index) {
+    public CheckerSquare getSquare(int index)
+    {
         return this.squares[index];
     }
 
@@ -144,7 +155,8 @@ public class CheckerBoardState {
        @param y The y axis to find the square in.
        @return The checker square found at that spot.
      */
-    public CheckerSquare getSquareAtPoint(int x, int y) {
+    public CheckerSquare getSquareAtPoint(int x, int y)
+    {
         return this.getSquare(y * 8 + x);
     }
 
@@ -153,7 +165,8 @@ public class CheckerBoardState {
        @param piece The piece to add to the board.
        @param index The place to add the piece to the board.
      */
-    public void addPieceAtIndex(Piece piece, int index) {
+    public void addPieceAtIndex(Piece piece, int index)
+    {
         this.squares[index].setPiece(piece);
     }
 
@@ -162,7 +175,8 @@ public class CheckerBoardState {
        @param piece The example piece to compare other pieces to.
        @return A list of Integers where each Integer is board index.
     */
-    public List<Integer> getPieceLocations(Piece piece) {
+    public List<Integer> getPieceLocations(Piece piece)
+    {
         // start empty
         List result = new ArrayList<Integer>();
 
@@ -184,7 +198,8 @@ public class CheckerBoardState {
        @param piece The example piece to compare other pieces to.
        @return An int[] array where each element is a board index.
     */
-    public int[] getPieceLocationsInts(Piece piece) {
+    public int[] getPieceLocationsInts(Piece piece)
+    {
         // call above method to start off
         List<Integer> result = this.getPieceLocations(piece);
 
@@ -192,7 +207,8 @@ public class CheckerBoardState {
         int[] ret = new int [result.size()];
 
         // go through for each element in return array
-        for (int i = 0 ; i < ret.length; i++) {
+        for (int i = 0 ; i < ret.length; i++)
+        {
             // set value to piece of result from above
             ret[i] = result.get(i).intValue();
         }
@@ -200,6 +216,11 @@ public class CheckerBoardState {
         // return the new int array
         return ret;
     }
+
+
+
+
+
     // based off of http://stackoverflow.com/questions/718554/how-to-convert-an-arraylist-containing-integers-to-primitive-int-array
 
     /**
@@ -207,73 +228,117 @@ public class CheckerBoardState {
        helper for CheckerBoard.
        @return List of indices of player one.
      */
-    public int[] getPlayerOnePieceLocationsInts() {
+    public int[] getPlayerOnePieceLocationsInts()
+    {
         return this.getPieceLocationsInts(new Piece(PieceType.PAWN, Player.ONE));
     }
+
+
+
+
+
 
     /**
        Get the player two piece locations. Used as a compatability
        helper for CheckerBoard.
        @return List of indices of player two.
      */
-    public int[] getPlayerTwoPieceLocationsInts() {
+    public int[] getPlayerTwoPieceLocationsInts()
+    {
         return this.getPieceLocationsInts(new Piece(PieceType.PAWN, Player.TWO));
     }
+
+
+
+
+
 
     /**
        Is the move a valid move for this board?
        @param move The move to check validity of.
        @return Whether it is a valid move
      */
-    public boolean isValidMove(CheckerMove move) {
+    public boolean isValidMove(CheckerMove move)
+    {
         // Board newBoard = (Board) board.clone();
 
         // Make sure we are withihn the board's bounds
         if (move.getStart().getIndex() < 0 || move.getStart().getIndex() >= 64
-            || move.getEnd().getIndex() < 0 || move.getEnd().getIndex() >= 64) {
+            || move.getEnd().getIndex() < 0 || move.getEnd().getIndex() >= 64)
+        {
             return false;
         }
 
+
         // Make sure the end spot is empty
-        if (move.getEnd().getPiece().getType() != PieceType.EMPTY) {
+        if (move.getEnd().getPiece().getType() != PieceType.EMPTY)
+        {
             return false;
         }
+
+
 
         int dx = move.getEnd().getX() - move.getStart().getX();
         int dy = move.getEnd().getY() - move.getStart().getY();
 
         // check directions, either up or down
-        if (dy >= 1 && move.getStart().getPiece().getPlayer() == Player.ONE) { // player two moves up
+        if (dy >= 1 && move.getStart().getPiece().getPlayer() == Player.ONE)
+        { // player two moves up
             // okay
-        } else if (dy <= -1 && move.getStart().getPiece().getPlayer() == Player.TWO) { // player one moves down
+        }
+
+        else if (dy <= -1 && move.getStart().getPiece().getPlayer() == Player.TWO)
+        {
+            // player one moves down
             // okay
-        } else if (move.getStart().getPiece().getType() == PieceType.KING) {
+        }
+
+        else if (move.getStart().getPiece().getType() == PieceType.KING)
+        {
             // okay (kings can go any direction)
-        } else {
+        }
+
+        else
+        {
             return false;
         }
 
         // check diagonal
-        if (move.isSingleJump()) { // single jump
+        if (move.isSingleJump())
+        { // single jump
             // okay
-        } else if (move.isDoubleJump()) { // double jump
+        }
+
+        else if (move.isDoubleJump())
+        { // double jump
 
             // find the piece that is jumped over
             CheckerSquare middle = this.getMiddleSquare(move);
 
             // make sure that piece is actually real
-            if (middle.getPiece().getType() == PieceType.EMPTY) {
-                return false;
-            } else if (move.getStart().getPiece().getPlayer() == middle.getPiece().getPlayer()) { // make sure we aren't jumping over ourself
+            if (middle.getPiece().getType() == PieceType.EMPTY)
+            {
                 return false;
             }
 
-        } else {
+            else if (move.getStart().getPiece().getPlayer() == middle.getPiece().getPlayer())
+            { // make sure we aren't jumping over ourself
+                return false;
+            }
+
+        }
+
+        else
+        {
             return false;
         }
 
         return true;
     }
+
+
+
+
 
     /**
        Get the square between a double jump move. If this is not a
@@ -281,18 +346,24 @@ public class CheckerBoardState {
        @param move The move to check for.
        @return The middle square
      */
-    public CheckerSquare getMiddleSquare(CheckerMove move) {
+    public CheckerSquare getMiddleSquare(CheckerMove move)
+    {
         int dx = move.getEnd().getX() - move.getStart().getX();
         int dy = move.getEnd().getY() - move.getStart().getY();
         return this.getSquareAtPoint(move.getStart().getX() + dx / 2, move.getStart().getY() + dy / 2);
     }
+
+
+
+
 
     /**
        Get valid moves from a square. See top for more indepth explanation.
        @param square1 The square to start from.
        @return A list of possible moves
     */
-    public List<CheckerMove> getValidMoves(CheckerSquare square1) {
+    public List<CheckerMove> getValidMoves(CheckerSquare square1)
+    {
         // start empty
         List<CheckerMove> moves = new ArrayList<CheckerMove>();
 
@@ -309,13 +380,18 @@ public class CheckerBoardState {
         return moves;
     }
 
+
+
+
+
     /**
        Get valid "double jumps" from a square. See top for more
        indepth explanation.
        @param square1 The square to start from.
        @return A list of possible moves that are "double jumps"
     */
-    public List<CheckerMove> getValidDoubleJumps(CheckerSquare square1) {
+    public List<CheckerMove> getValidDoubleJumps(CheckerSquare square1)
+    {
         // start empty
         List<CheckerMove> moves = new ArrayList<CheckerMove>();
 
@@ -335,11 +411,16 @@ public class CheckerBoardState {
         return moves;
     }
 
+
+
+
+
     /**
        Execute the move on this board.
        @param move The move to run on the board.
     */
-    public void executeMove(CheckerMove move) {
+    public void executeMove(CheckerMove move)
+    {
         // move piece up to target
         this.squares[move.getEnd().getIndex()].setPiece(move.getStart().getPiece());
 
@@ -357,9 +438,14 @@ public class CheckerBoardState {
             move.getEnd().getY() == 7) {
             move.getEnd().getPiece().king();
         // king me if on the first row for p2
-        } else if (move.getEnd().getPiece().getPlayer() == Player.TWO &&
+        }
+
+        else if (move.getEnd().getPiece().getPlayer() == Player.TWO &&
                    move.getEnd().getY() == 0) {
             move.getEnd().getPiece().king();
         }
     }
+
+
+
 }

@@ -67,7 +67,8 @@ public class CheckerBoard extends JPanel implements MouseListener
            the default starting board with 12 pieces for player one on
            top, and 12 pieces for player two on bottom.
         */
-        public CheckerBoard() {
+        public CheckerBoard()
+        {
                 this(CheckerBoardState.getStartingBoard());
         }
 
@@ -138,24 +139,22 @@ public class CheckerBoard extends JPanel implements MouseListener
         //MOUSE locations THIS DOESNT DO ANYTHING THE REAL CODE IS FAR BELOW
 
         @Override
-        public void mousePressed(MouseEvent e) {
-        }
+        public void mousePressed(MouseEvent e) {}
 
 	@Override
-        public void mouseReleased(MouseEvent e) {
-        }
+        public void mouseReleased(MouseEvent e) {}
 
 	@Override
-        public void mouseEntered(MouseEvent e) {
-        }
+        public void mouseEntered(MouseEvent e) {}
 
 	@Override
-        public void mouseExited(MouseEvent e) {
-        }
+        public void mouseExited(MouseEvent e) {}
 
 	@Override
-        public void mouseClicked(MouseEvent e) {
-        }
+        public void mouseClicked(MouseEvent e) {}
+
+
+
 
         /**
            Initialie window and container settings. This will
@@ -211,7 +210,8 @@ public class CheckerBoard extends JPanel implements MouseListener
            Initialize the static background for each of the 64 spots.
            Each spot alternates between red and black colored.
          */
-	public void drawGameBackground() {
+	public void drawGameBackground()
+        {
 
                 /******************************** Initial Board Spaces ********************************/
 
@@ -241,6 +241,9 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 	}
 
+
+
+
         /**
            Draw the game board.
            @param state The state of the board to be drawn.
@@ -260,16 +263,23 @@ public class CheckerBoard extends JPanel implements MouseListener
                 for( CheckerSquare square : state.getSquares())
                 {
 
-			if (square.getPiece().getType() != PieceType.EMPTY) {
-				if (square.getPiece().getPlayer() == Player.ONE) {
+			if (square.getPiece().getType() != PieceType.EMPTY)
+                        {
+				if (square.getPiece().getPlayer() == Player.ONE)
+                                {
 					drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece().getPlayer());
-				} else if (square.getPiece().getPlayer() == Player.TWO) {
+				}
+
+                                else if (square.getPiece().getPlayer() == Player.TWO)
+                                {
 					drawnPieces[n++] = new GamePiece(this, Color.GRAY, square.getIndex(), square.getPiece().getPlayer());
 				}
 			}
 
 
                 }
+
+
 
                 // hold onto the current piece
                 JPanel currentPiece;
@@ -316,7 +326,8 @@ public class CheckerBoard extends JPanel implements MouseListener
 			}
 
                         // if nothing was found from the drawnPieces
-			if (!found) {
+			if (!found)
+                        {
                                 gameBoardWithPieces.add(currentBoardSpace); // the current space is empty
 			}
 
@@ -331,29 +342,38 @@ public class CheckerBoard extends JPanel implements MouseListener
         }
 
 
+
+
+
         /**
            Clear the highlighted pieces of the board. This method
            should restore the board to how it was initially. All blue
            spaces and golden piece borders are removed.
         */
-	public void clearHighlights() {
+	public void clearHighlights()
+        {
 
                 // disregard in extra jump mode so we don't cheat
-		if (extraJumpMode) {
+		if (extraJumpMode)
+                {
 			return;
 		}
 
 
                 // go through each drawn piece
-		for (GamePiece piece : this.drawnPieces) {
-			if (piece != null) { // verify it isn't null
+		for (GamePiece piece : this.drawnPieces)
+                {
+			if (piece != null)
+                        { // verify it isn't null
 				piece.deselect(); // deselect it
 			}
 		}
 
                 // go through each board space
-		for (CheckerBoardSpace space : this.boardSpaces) {
-			if (space != null) { // make sure it isn't null
+		for (CheckerBoardSpace space : this.boardSpaces)
+                {
+			if (space != null)
+                        { // make sure it isn't null
 				space.dehighlight(); // un highlight it
 			}
 		}
@@ -366,16 +386,20 @@ public class CheckerBoard extends JPanel implements MouseListener
            square to perform the move.
            @param square The square to start the move from.
         */
-	public void showAllowedMoves(CheckerSquare square) {
+	public void showAllowedMoves(CheckerSquare square)
+        {
                 // get valid moves from CheckerBoadState
 		List<CheckerMove> moves = this.state.getValidMoves(square);
 
                 // iterate through each move
-		for (CheckerMove move : moves) {
+		for (CheckerMove move : moves)
+                {
                         // highlight the space corresponding to that index.
 			this.boardSpaces[move.getEnd().getIndex()].highlight();
 		}
 	}
+
+
 
 
         /**
@@ -384,11 +408,13 @@ public class CheckerBoard extends JPanel implements MouseListener
            @param index The index corresponding to the piece that has
            been selected.
          */
-        public void setSelected(int index) {
+        public void setSelected(int index)
+        {
 		CheckerSquare square = this.state.getSquare(index);
 
 		// only let active player select
-		if (square.getPiece().getPlayer() == this.activePlayer) {
+		if (square.getPiece().getPlayer() == this.activePlayer)
+                {
 			this.selectedSquare = square;
 
                         // auto show allowed moves
@@ -401,16 +427,21 @@ public class CheckerBoard extends JPanel implements MouseListener
            See top for more details.
            @return Whether or not board is in extra jump mode.
         */
-        public boolean isInExtraJumpMode() {
+        public boolean isInExtraJumpMode()
+        {
                 return this.extraJumpMode;
         }
+
+
+
 
         /**
            Redraw all of the UI elements. This will remove everything
            from the board, then re init everything, then draw the
            board state again.
          */
-        public void redrawAll() {
+        public void redrawAll()
+        {
 		// cleanup everything
 		this.removeAll();
 
@@ -436,6 +467,9 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.drawGameBoard(state); // draws the board at its new state
         }
 
+
+
+
         /**
            Move the piece selected piece to index. Instead of just
            modifying the current board, this will first modify the
@@ -444,7 +478,8 @@ public class CheckerBoard extends JPanel implements MouseListener
            sync with the board Data Types.
            @param index The current index of the 64 spaces to move to.
          */
-	public void moveTo(int index) {
+	public void moveTo(int index)
+        {
                 // disable extra jump mode after movement
 		this.extraJumpMode = false;
 
@@ -465,13 +500,16 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // check if the last move was a double jump and that
                 // there is at least one available additinoal double
                 // jump to use.
-		if (move.isDoubleJump() && extraJumps.size() > 0) {
+		if (move.isDoubleJump() && extraJumps.size() > 0)
+                {
                         // lock user out of other moves
 			this.extraJumpMode = true;
 
                         // find the piece that was last moved
-			for (GamePiece piece : this.drawnPieces) {
-				if (piece != null && piece.getIndex() == move.getEnd().getIndex()) {
+			for (GamePiece piece : this.drawnPieces)
+                        {
+				if (piece != null && piece.getIndex() == move.getEnd().getIndex())
+                                {
                                         // use end index because the
                                         // board data type has already
                                         // executed the move.
@@ -481,21 +519,29 @@ public class CheckerBoard extends JPanel implements MouseListener
 			}
 
                         // unhighlight everything
-                        for (CheckerBoardSpace space : this.boardSpaces) {
+                        for (CheckerBoardSpace space : this.boardSpaces)
+                        {
                                 if (space != null) { // make sure it isn't null
                                         space.dehighlight(); // un highlight it
                                 }
                         }
 
                         // highlight each of the extra jumps
-			for (CheckerMove move2 : extraJumps) {
+			for (CheckerMove move2 : extraJumps)
+                        {
 				this.boardSpaces[move2.getEnd().getIndex()].highlight();
 			}
-		} else {
+		}
+
+                else
+                {
                         // switch off to the other player
 			this.switchPlayer();
 		}
 	}
+
+
+
 
         /**
            Enable the other player to move a piece. This is called
@@ -515,13 +561,23 @@ public class CheckerBoard extends JPanel implements MouseListener
 		}
 	}
 
+
+
+
         /**
            Get the currently active player who has control of the
            board.
         */
-	public Player getActivePlayer() {
+	public Player getActivePlayer()
+        {
 		return this.activePlayer;
 	}
+
+
+
+
+
+
 
         /**
            Initialize the checker board as a main program.
@@ -530,4 +586,8 @@ public class CheckerBoard extends JPanel implements MouseListener
         {
                 CheckerBoard testBoard = new CheckerBoard();
         }
+
+
+
+        
 }

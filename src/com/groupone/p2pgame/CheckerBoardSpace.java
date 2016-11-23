@@ -97,9 +97,11 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	   Unhighlight the square. Goes back to the color before
 	   highlight was called.
 	*/
-	public void dehighlight() {
+	public void dehighlight()
+        {
 		this.isHighlighted = false;
-		if (this.oldSpaceColor != null) {
+		if (this.oldSpaceColor != null)
+                {
 			this.setColor(oldSpaceColor);
 		}
 	}
@@ -109,11 +111,15 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	   square was already highlighted.
 	*/
 	@Override
-        public void mousePressed(MouseEvent e) {
+        public void mousePressed(MouseEvent e)
+        {
                 if (this.isHighlighted) {
 			this.board.moveTo(this.index);
 		}
         }
+
+
+
 
 	@Override
         public void mouseReleased(MouseEvent e) {

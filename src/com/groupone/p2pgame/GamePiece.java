@@ -39,6 +39,9 @@ public class GamePiece extends JPanel implements MouseListener
                 this.player = player;
         }
 
+
+
+
         /**
            Update the graphics of the oval.
            @param graphics The graphics to draw to.
@@ -73,13 +76,18 @@ public class GamePiece extends JPanel implements MouseListener
 */
         }
 
+
+
+
         /**
            Select the game piece, show the yellow halo if we are an
            active player.
          */
-        public void select() {
+        public void select()
+        {
                 // check if the board's active player is us
-                if (this.board.getActivePlayer() == this.player) {
+                if (this.board.getActivePlayer() == this.player)
+                {
                         // setup the halo
                         isPressed=true;
                         repaint(); // make sure we repaint
@@ -89,62 +97,91 @@ public class GamePiece extends JPanel implements MouseListener
                 }
         }
 
+
+
+
         /**
            Deselect the game piece, remove the yellow halo.
         */
-        public void deselect() {
+        public void deselect()
+        {
                 isPressed = false; // get rid of yellow halo
                 repaint(); // make sure we repaint
         }
 
+
+
+
         /**
            Get the index of the piece in the game board.
          */
-        public int getIndex() {
+        public int getIndex()
+        {
                 return this.gameBoardIndex;
         }
+
+
+
 
         /**
            Clear the selected pieces on the board, then Select this
            piece.
         */
 	@Override
-        public void mousePressed(MouseEvent e) {
-                if (!this.board.isInExtraJumpMode()) {
+        public void mousePressed(MouseEvent e)
+        {
+                if (!this.board.isInExtraJumpMode())
+                {
                         this.board.clearHighlights();
                         CheckerSquare square = this.board.state.getSquare(gameBoardIndex);
+
                         if(this.board.state.getValidMoves(square).size() != 0)
                         {
-                        select();
-                      }
+                                select();
+                        }
                       //  kingMe=true;
                         //repaint();
                 }
         }
 
+
+
+
 	@Override
         public void mouseReleased(MouseEvent e) {
         }
 
+
+
+
 	@Override
-        public void mouseEntered(MouseEvent e) {
+        public void mouseEntered(MouseEvent e)
+        {
+
+
           CheckerSquare square = this.board.state.getSquare(gameBoardIndex);
           if(this.board.state.getValidMoves(square).size() != 0)
           {
-          isPressed=true;
-          repaint();
-        }
+                  isPressed=true;
+                  repaint();
+          }
+
+
         }
 
+
+
+
 	@Override
-        public void mouseExited(MouseEvent e) {
+        public void mouseExited(MouseEvent e)
+        {
           CheckerSquare square = this.board.state.getSquare(gameBoardIndex);
           if(this.board.state.getValidMoves(square).size() != 0)
           {
 
-          isPressed=false;
-          repaint();
-        }
+                  isPressed=false;
+                repaint();
+          }
         }
 
 	@Override
