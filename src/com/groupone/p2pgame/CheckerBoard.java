@@ -62,6 +62,8 @@ public class CheckerBoard extends JPanel implements MouseListener
         private Player activePlayer;
         private boolean extraJumpMode;
 
+        public JLabel whoseTurn;
+
         /**
            Start a new game board. Without arguments, this will use
            the default starting board with 12 pieces for player one on
@@ -181,8 +183,9 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.frame.setResizable(false);
 
                 // setup title
-                this.frame.setTitle("CheckerBoard");
+                this.frame.setTitle("Begin Game (Player Two Has First Move)");
                 this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
 
                 // layered so we can also use the gameBoardWithPieces
@@ -553,11 +556,13 @@ public class CheckerBoard extends JPanel implements MouseListener
 		if (this.activePlayer == Player.ONE)
                 {
 			this.activePlayer = Player.TWO;
+                        this.frame.setTitle("CheckerBoard: (Player Two's Turn)");
 		}
 
                 else if (this.activePlayer == Player.TWO)
                 {
 			this.activePlayer = Player.ONE;
+                        this.frame.setTitle("CheckerBoard: (Player One's Turn)");
 		}
 	}
 
@@ -589,5 +594,5 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-        
+
 }

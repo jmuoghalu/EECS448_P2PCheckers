@@ -70,7 +70,8 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	   Set the color of the square. Causes a repaint.
 	   @param spaceColor The color to set the square to.
 	*/
-	public void setColor(Color spaceColor) {
+	public void setColor(Color spaceColor)
+        {
 		this.spaceColor = spaceColor;
 		this.repaint();
 	}
@@ -79,7 +80,8 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	   Get the current space color.
 	   @param The color inside this square.
 	*/
-	public Color getSpaceColor() {
+	public Color getSpaceColor()
+        {
 		return this.spaceColor;
 	}
 
@@ -87,7 +89,8 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	   Highlight the square, indicating it can be clicked. Sets
 	   the color to Swing's Blue.
 	*/
-	public void highlight() {
+	public void highlight()
+        {
 		this.isHighlighted = true;
 		this.oldSpaceColor = spaceColor;
 		this.setColor(Color.BLUE);

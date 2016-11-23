@@ -6,8 +6,8 @@ import java.util.ArrayList;
 /**
    <p>
    Checker board state holds all of the data about the checker board
-   displayed in CheckerBoard. The The checker board is held
-   in an array of 64 spaces. The the top left space is the first space
+   displayed in CheckerBoard. The checker board is held
+   in an array of 64 spaces. The top left space is the first space
    and the bottom right space is the last space. The checkerboard is
    wrapped around after the 8th space so that the 8th space from the
    right on the first row is followed by the 1st space on the left for
@@ -79,8 +79,14 @@ import java.util.ArrayList;
      </pre>
 
 */
-public class CheckerBoardState {
+public class CheckerBoardState
+{
+
     private CheckerSquare[] squares;
+
+
+
+
 
     /**
        Get the starting board configuration, where each side has 12
@@ -99,13 +105,15 @@ public class CheckerBoardState {
         CheckerBoardState state = new CheckerBoardState();
 
         // add pieces for player one
-        for (int index : playerOneLocations) {
-            state.addPieceAtIndex(new Piece(PieceType.PAWN, Player.ONE), index);
+        for (int index : playerOneLocations)
+        {
+            state.addPieceAtIndex( new Piece(PieceType.PAWN, Player.ONE), index );
         }
 
         // add pieces for player two
-        for (int index : playerTwoLocations) {
-            state.addPieceAtIndex(new Piece(PieceType.PAWN, Player.TWO), index);
+        for (int index : playerTwoLocations)
+        {
+            state.addPieceAtIndex( new Piece(PieceType.PAWN, Player.TWO), index );
         }
 
         // return the state
@@ -149,6 +157,10 @@ public class CheckerBoardState {
         return this.squares[index];
     }
 
+
+
+
+
     /**
        Get the checker square from the x y coordinates.
        @param x The x axis to find the square in.
@@ -160,6 +172,10 @@ public class CheckerBoardState {
         return this.getSquare(y * 8 + x);
     }
 
+
+
+
+
     /**
        Add the given piece at the index.
        @param piece The piece to add to the board.
@@ -169,6 +185,10 @@ public class CheckerBoardState {
     {
         this.squares[index].setPiece(piece);
     }
+
+
+
+
 
     /**
        Get the index of the pieces on the board that match the example piece.
@@ -192,6 +212,10 @@ public class CheckerBoardState {
         // return result
         return result;
     }
+
+
+
+
 
     /**
        Get the index of the pieces on the board that match the example piece.
@@ -368,12 +392,14 @@ public class CheckerBoardState {
         List<CheckerMove> moves = new ArrayList<CheckerMove>();
 
         // go through each square on this board
-        for (CheckerSquare square2 : getSquares()) {
+        for (CheckerSquare square2 : getSquares())
+        {
             // create a possible move from it
             CheckerMove move = new CheckerMove(square1, square2);
 
             // check if that move is valid
-            if (isValidMove(move)) {
+            if (isValidMove(move))
+            {
                 moves.add(move);
             }
         }
@@ -402,7 +428,8 @@ public class CheckerBoardState {
 
             // check if that move is valid
             // then check if it is a double jump
-            if (isValidMove(move) && move.isDoubleJump()) {
+            if (isValidMove(move) && move.isDoubleJump())
+            {
                 moves.add(move);
             }
         }
@@ -421,6 +448,7 @@ public class CheckerBoardState {
     */
     public void executeMove(CheckerMove move)
     {
+
         // move piece up to target
         this.squares[move.getEnd().getIndex()].setPiece(move.getStart().getPiece());
 
@@ -428,22 +456,30 @@ public class CheckerBoardState {
         this.squares[move.getStart().getIndex()].setPiece(new Piece());
 
         // capture piece on double jump
-        if (move.isDoubleJump()) {
+        if (move.isDoubleJump())
+        {
             CheckerSquare square = this.getMiddleSquare(move);
             this.squares[square.getIndex()].setPiece(new Piece());
         }
 
+
+
         // king me if on the last row for p1
         if (move.getEnd().getPiece().getPlayer() == Player.ONE &&
-            move.getEnd().getY() == 7) {
+            move.getEnd().getY() == 7)
+        {
             move.getEnd().getPiece().king();
         // king me if on the first row for p2
         }
 
+
+
         else if (move.getEnd().getPiece().getPlayer() == Player.TWO &&
-                   move.getEnd().getY() == 0) {
+                   move.getEnd().getY() == 0)
+        {
             move.getEnd().getPiece().king();
         }
+
     }
 
 
