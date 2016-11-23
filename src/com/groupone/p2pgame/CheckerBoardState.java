@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
    <p>
    Checker board state holds all of the data about the checker board
-   displayed in CheckerBoardAlternate. The The checker board is held
+   displayed in CheckerBoard. The The checker board is held
    in an array of 64 spaces. The the top left space is the first space
    and the bottom right space is the last space. The checkerboard is
    wrapped around after the 8th space so that the 8th space from the
@@ -204,7 +204,7 @@ public class CheckerBoardState {
 
     /**
        Get the player one piece locations. Used as a compatability
-       helper for CheckerBoardAlternate.
+       helper for CheckerBoard.
        @return List of indices of player one.
      */
     public int[] getPlayerOnePieceLocationsInts() {
@@ -213,7 +213,7 @@ public class CheckerBoardState {
 
     /**
        Get the player two piece locations. Used as a compatability
-       helper for CheckerBoardAlternate.
+       helper for CheckerBoard.
        @return List of indices of player two.
      */
     public int[] getPlayerTwoPieceLocationsInts() {

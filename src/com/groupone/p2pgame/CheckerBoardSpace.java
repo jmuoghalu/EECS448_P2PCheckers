@@ -14,7 +14,7 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 {
         private Color spaceColor; // red or black
 	private Color oldSpaceColor;
-	private CheckerBoardAlternate board;
+	private CheckerBoard board;
 	private boolean isHighlighted;
 	private int index;
 
@@ -27,7 +27,7 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	   @param index The index of the space in the 0 to 63 range
 	   used by the board UI.
 	 */
-	public CheckerBoardSpace(CheckerBoardAlternate board, int color, int index)
+	public CheckerBoardSpace(CheckerBoard board, int color, int index)
         {
 		super();
 

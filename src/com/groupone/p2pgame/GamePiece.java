@@ -20,7 +20,7 @@ public class GamePiece extends JPanel implements MouseListener
         private boolean kingMe=false;
         private char[] kingChar = {'K'};
         private String kingString = "K";
-        private CheckerBoardAlternate board;
+        private CheckerBoard board;
 
         /**
            Create a new game piece.
@@ -30,7 +30,7 @@ public class GamePiece extends JPanel implements MouseListener
            @param index The index that this piece occupies.
            @param player The player that owns this piece.
         */
-        public GamePiece(CheckerBoardAlternate board, Color color, int index, Player player)
+        public GamePiece(CheckerBoard board, Color color, int index, Player player)
         {
                 this.addMouseListener(this); // setup mouse listener
                 this.pieceColor = color;
