@@ -157,7 +157,6 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-
         /**
            Initialie window and container settings. This will
            initialize the "frame", "gameBoard", and
@@ -268,15 +267,27 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 			if (square.getPiece().getType() != PieceType.EMPTY)
                         {
+
 				if (square.getPiece().getPlayer() == Player.ONE)
                                 {
 					drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece().getPlayer());
+
+                                        if (square.getPiece().getType() == PieceType.KING)
+                                        {
+                                                //drawnPieces[n].setKing();
+                                        }
 				}
 
                                 else if (square.getPiece().getPlayer() == Player.TWO)
                                 {
 					drawnPieces[n++] = new GamePiece(this, Color.GRAY, square.getIndex(), square.getPiece().getPlayer());
+
+                                        if (square.getPiece().getType() == PieceType.KING)
+                                        {
+                                                //drawnPieces[n].setKing();
+                                        }
 				}
+
 			}
 
 

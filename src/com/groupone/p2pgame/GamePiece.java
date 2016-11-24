@@ -14,12 +14,11 @@ public class GamePiece extends JPanel implements MouseListener
 
 
         private Color pieceColor;
-        private boolean isPressed = false;
+        private boolean isPressed;
         private int gameBoardIndex;
         private Player player;
-        private boolean kingMe=false;
-        private char[] kingChar = {'K'};
-        private String kingString = "K";
+        private boolean kingMe;
+        private String kingString;
         private CheckerBoard board;
 
         /**
@@ -37,6 +36,11 @@ public class GamePiece extends JPanel implements MouseListener
 		this.board = board;
                 this.gameBoardIndex = index;
                 this.player = player;
+
+                this.isPressed = false;
+
+                this.kingMe = false;
+                this.kingString = "K";
         }
 
 
@@ -54,26 +58,26 @@ public class GamePiece extends JPanel implements MouseListener
 
                 // check if we should draw the yellow halo around it
                 // this must be done first
-                if (isPressed) {
+                if (isPressed)
+                {
                         graphics.setColor(Color.YELLOW);
                         graphics.drawOval(8, 8, 64, 64);
                         graphics.fillOval(8, 8, 64, 64);
                 }
 
-                // darw the ordinary piece
+                if(this.kingMe)
+                {
+                        graphics.setColor(Color.BLACK);
+                        graphics.drawString(kingString, 30 , 30);
+                }
+
+
+                // draw the ordinary piece
                 graphics.setColor(this.pieceColor);
                 graphics.drawOval(10, 10, 60, 60);
                 graphics.fillOval(10, 10, 60, 60);
-              /*
-                if(kingMe)
-                {
 
-                  graphics.setColor(Color.BLACK);
-                  graphics.drawChars(kingChar, 0, 1, 10, 10);
-                  graphics.drawString(kingString, 0,0);
 
-                }
-*/
         }
 
 
@@ -121,6 +125,23 @@ public class GamePiece extends JPanel implements MouseListener
         }
 
 
+        /**
+           The piece in question is now designated as a king.
+         */
+        public void setKing()
+        {
+                this.kingMe = true;
+        }
+
+
+
+
+
+
+
+
+
+
 
 
         /**
@@ -139,8 +160,6 @@ public class GamePiece extends JPanel implements MouseListener
                         {
                                 select();
                         }
-                      //  kingMe=true;
-                        //repaint();
                 }
         }
 
@@ -180,11 +199,15 @@ public class GamePiece extends JPanel implements MouseListener
           {
 
                   isPressed=false;
-                repaint();
+                  repaint();
           }
         }
 
 	@Override
         public void mouseClicked(MouseEvent e) {
         }
+
+
+
+
 }
