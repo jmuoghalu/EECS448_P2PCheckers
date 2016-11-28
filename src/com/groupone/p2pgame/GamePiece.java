@@ -77,14 +77,16 @@ public class GamePiece extends JPanel implements MouseListener
 
                 if(this.kingMe)
                 {
-                        /*
-                        graphics.setColor(Color.BLACK);
-                        graphics.drawString(kingString, 30 , 30);
-                        */
                         // draw the king piece
                         graphics.setColor(this.kingColor);
                         graphics.drawOval(10, 10, 60, 60);
                         graphics.fillOval(10, 10, 60, 60);
+
+                        // from: http://stackoverflow.com/questions/18249592/how-to-change-font-size-in-drawstring-java
+                        graphics.setFont(new Font("TimesRoman", Font.PLAIN, 36));
+                        graphics.setColor(Color.BLACK);
+                        graphics.drawString(kingString, 30 , 50);
+
                 }
                 else
                 {
