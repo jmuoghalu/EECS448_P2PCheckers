@@ -54,6 +54,8 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         private CheckerBoardSpace[] boardSpaces;
         private GamePiece[] drawnPieces;
+        private int playerOnePiecesLeft;
+        private int playerTwoPiecesLeft;
 
         public CheckerBoardState state;
 
@@ -114,12 +116,14 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 // all 64 spaces are stored
                 // only the black one are interactive
-                boardSpaces = new CheckerBoardSpace[64];
+                this.boardSpaces = new CheckerBoardSpace[64];
 
-                drawnPieces = new GamePiece[24]; // all of player one's pieces will be placed in this array before player two's pieces
+                this.drawnPieces = new GamePiece[24]; // all of player one's pieces will be placed in this array before player two's pieces
 
                 /********************************  ********************************/
 
+                this.playerOnePiecesLeft = 12;
+                this.playerTwoPiecesLeft = 12;
 
 
 
@@ -565,6 +569,15 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
+
+
+                // handle the case when an opposing player loses a piece
+                if( move.isDoubleJump() )
+                {
+                        this.pieceRemovedDuringTurn();
+                }
+
+
 		// handle extra jumps
 		List<CheckerMove> extraJumps = this.state.getValidDoubleJumps(move.getEnd());
 
@@ -603,6 +616,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                         {
 				this.boardSpaces[move2.getEnd().getIndex()].highlight();
 			}
+
 		}
 
                 else
@@ -631,7 +645,23 @@ public class CheckerBoard extends JPanel implements MouseListener
 	}
 
 
+        /**
+           The board acknowledges that at least one of the opposing player's
+           pieces was removed during a double jump.
+         */
+        public void pieceRemovedDuringTurn()
+        {
 
+                if(this.activePlayer == Player.TWO)
+                {
+                        this.playerOnePiecesLeft--;
+                }
+                else
+                {
+                        this.playerTwoPiecesLeft--;
+                }
+
+        }
 
 
 
@@ -644,17 +674,32 @@ public class CheckerBoard extends JPanel implements MouseListener
 	public void switchPlayer()
         {
 
-		if (this.activePlayer == Player.ONE)
+		if (this.activePlayer == Player.ONE  && this.playerTwoPiecesLeft > 0 )
                 {
 			this.activePlayer = Player.TWO;
-                        this.frame.setTitle("CheckerBoard: (Player Two's Turn)");
+                        this.frame.setTitle("CheckerBoard: (Player Two's Turn) (Pieces Left: " + this.playerTwoPiecesLeft + ")");
 		}
 
-                else if (this.activePlayer == Player.TWO)
+                else if (this.activePlayer == Player.TWO && this.playerOnePiecesLeft > 0 )
                 {
 			this.activePlayer = Player.ONE;
-                        this.frame.setTitle("CheckerBoard: (Player One's Turn)");
+                        this.frame.setTitle("CheckerBoard: (Player One's Turn) (Pieces Left: " + this.playerOnePiecesLeft + ")");
 		}
+
+                else
+                {
+
+                        if( this.playerOnePiecesLeft == 0 )
+                        {
+                                this.frame.setTitle("Player Two Wins!");
+                        }
+                        else
+                        {
+                                this.frame.setTitle("Player One Wins!");
+                        }
+                        this.activePlayer = Player.NONE;
+
+                }
 	}
 
 
