@@ -74,6 +74,9 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this(CheckerBoardState.getStartingBoard());
         }
 
+
+
+
         /**
            Setup a checkerboard from an "CheckerBoardState".
            @see CheckerBoardState
@@ -208,6 +211,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         }
 
+
+
+
+
+
         /**
            Initialize the static background for each of the 64 spots.
            Each spot alternates between red and black colored.
@@ -246,6 +254,9 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
+
+
+
         /**
            Draw the game board.
            @param state The state of the board to be drawn.
@@ -271,25 +282,22 @@ public class CheckerBoard extends JPanel implements MouseListener
 				if (square.getPiece().getPlayer() == Player.ONE)
                                 {
 					drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece().getPlayer());
-
-                                        if (square.getPiece().getType() == PieceType.KING)
-                                        {
-                                                //drawnPieces[n].setKing();
-                                        }
 				}
 
                                 else if (square.getPiece().getPlayer() == Player.TWO)
                                 {
-					drawnPieces[n++] = new GamePiece(this, Color.GRAY, square.getIndex(), square.getPiece().getPlayer());
-
-                                        if (square.getPiece().getType() == PieceType.KING)
-                                        {
-                                                //drawnPieces[n].setKing();
-                                        }
+					drawnPieces[n++] = new GamePiece(this, Color.LIGHT_GRAY, square.getIndex(), square.getPiece().getPlayer());
 				}
 
-			}
 
+                                // set the new piece to King
+                                if (square.getPiece().getType() == PieceType.KING)
+                                {
+                                        // the former value of n
+                                        drawnPieces[n-1].setToKing();
+                                }
+
+			}
 
                 }
 
@@ -359,6 +367,10 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
+
+
+
+
         /**
            Clear the highlighted pieces of the board. This method
            should restore the board to how it was initially. All blue
@@ -393,6 +405,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 		}
 	}
 
+
+
+
+
+
         /**
            Indicate the allowed moves on the board. This is
            accomplished by highlighting the end squares for each move.
@@ -412,6 +429,8 @@ public class CheckerBoard extends JPanel implements MouseListener
 			this.boardSpaces[move.getEnd().getIndex()].highlight();
 		}
 	}
+
+
 
 
 
@@ -436,6 +455,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 		}
 	}
 
+
+
+
+
+
         /**
            Check if the board is in "extra jump mode".
            See top for more details.
@@ -445,6 +469,9 @@ public class CheckerBoard extends JPanel implements MouseListener
         {
                 return this.extraJumpMode;
         }
+
+
+
 
 
 
@@ -484,6 +511,32 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
+
+
+
+
+        /**
+           Update game pieces with King status where appropriate
+         */
+        public void setKings()
+        {
+
+                for( GamePiece dPiece : drawnPieces )
+                {
+                        if( dPiece != null && dPiece.getPlayer() == getActivePlayer() )
+                        {
+                                if ( state.getSquare( dPiece.getIndex() ).getPiece().getType() == PieceType.KING )
+                                {
+                                        dPiece.setToKing();
+                                }
+                        }
+                }
+
+        }
+
+
+
+
         /**
            Move the piece selected piece to index. Instead of just
            modifying the current board, this will first modify the
@@ -502,17 +555,21 @@ public class CheckerBoard extends JPanel implements MouseListener
 		CheckerSquare targetSquare = this.state.getSquare(index);
 		CheckerMove move = new CheckerMove(this.selectedSquare, targetSquare);
 
+
 		// actually modify the board
 		this.state.executeMove(move);
 
+
                 // tell board to redraw everything
                 this.redrawAll();
+
+
 
 		// handle extra jumps
 		List<CheckerMove> extraJumps = this.state.getValidDoubleJumps(move.getEnd());
 
                 // check if the last move was a double jump and that
-                // there is at least one available additinoal double
+                // there is at least one available additional double
                 // jump to use.
 		if (move.isDoubleJump() && extraJumps.size() > 0)
                 {
@@ -535,7 +592,8 @@ public class CheckerBoard extends JPanel implements MouseListener
                         // unhighlight everything
                         for (CheckerBoardSpace space : this.boardSpaces)
                         {
-                                if (space != null) { // make sure it isn't null
+                                if (space != null)
+                                { // make sure it isn't null
                                         space.dehighlight(); // un highlight it
                                 }
                         }
@@ -552,7 +610,28 @@ public class CheckerBoard extends JPanel implements MouseListener
                         // switch off to the other player
 			this.switchPlayer();
 		}
+
+
+
+                // set the GamePiece to King when appropriate
+                // note: at this point the activePlayer member variable has already been switched
+                if( (this.activePlayer == Player.TWO && index > 55) || (this.activePlayer == Player.ONE && index < 8) )
+                {
+                        for (GamePiece piece : this.drawnPieces)
+                        {
+                                // find the correct piece
+                                if (piece != null && piece.getIndex() == index)
+                                {
+                                        piece.setToKing();
+                                }
+                        }
+                }
+
+
 	}
+
+
+
 
 
 
@@ -564,6 +643,7 @@ public class CheckerBoard extends JPanel implements MouseListener
          */
 	public void switchPlayer()
         {
+
 		if (this.activePlayer == Player.ONE)
                 {
 			this.activePlayer = Player.TWO;

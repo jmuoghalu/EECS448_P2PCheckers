@@ -14,6 +14,7 @@ public class GamePiece extends JPanel implements MouseListener
 
 
         private Color pieceColor;
+        private Color kingColor;
         private boolean isPressed;
         private int gameBoardIndex;
         private Player player;
@@ -41,6 +42,15 @@ public class GamePiece extends JPanel implements MouseListener
 
                 this.kingMe = false;
                 this.kingString = "K";
+
+                if(this.pieceColor == Color.BLUE)
+                {
+                        this.kingColor = Color.CYAN;
+                }
+                else
+                {
+                        this.kingColor = Color.DARK_GRAY;
+                }
         }
 
 
@@ -67,15 +77,23 @@ public class GamePiece extends JPanel implements MouseListener
 
                 if(this.kingMe)
                 {
+                        /*
                         graphics.setColor(Color.BLACK);
                         graphics.drawString(kingString, 30 , 30);
+                        */
+                        // draw the king piece
+                        graphics.setColor(this.kingColor);
+                        graphics.drawOval(10, 10, 60, 60);
+                        graphics.fillOval(10, 10, 60, 60);
+                }
+                else
+                {
+                        // draw the ordinary piece
+                        graphics.setColor(this.pieceColor);
+                        graphics.drawOval(10, 10, 60, 60);
+                        graphics.fillOval(10, 10, 60, 60);
                 }
 
-
-                // draw the ordinary piece
-                graphics.setColor(this.pieceColor);
-                graphics.drawOval(10, 10, 60, 60);
-                graphics.fillOval(10, 10, 60, 60);
 
 
         }
@@ -126,9 +144,17 @@ public class GamePiece extends JPanel implements MouseListener
 
 
         /**
+          Get the player who controls this piece.
+         */
+        public Player getPlayer()
+        {
+                return this.player;
+        }
+
+        /**
            The piece in question is now designated as a king.
          */
-        public void setKing()
+        public void setToKing()
         {
                 this.kingMe = true;
         }

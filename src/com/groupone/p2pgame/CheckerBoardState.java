@@ -469,11 +469,11 @@ public class CheckerBoardState
             move.getEnd().getY() == 7)
         {
             move.getEnd().getPiece().king();
-        // king me if on the first row for p2
         }
 
 
 
+        // king me if on the first row for p2
         else if (move.getEnd().getPiece().getPlayer() == Player.TWO &&
                    move.getEnd().getY() == 0)
         {

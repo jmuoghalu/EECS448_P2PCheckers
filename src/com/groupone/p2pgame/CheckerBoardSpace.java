@@ -116,7 +116,8 @@ public class CheckerBoardSpace extends JPanel implements MouseListener
 	@Override
         public void mousePressed(MouseEvent e)
         {
-                if (this.isHighlighted) {
+                if (this.isHighlighted)
+                {
 			this.board.moveTo(this.index);
 		}
         }
