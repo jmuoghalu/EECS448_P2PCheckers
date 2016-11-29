@@ -51,6 +51,8 @@ public class CheckerBoard extends JPanel implements MouseListener
         private Container gameBoardBackground;
         private Container gameBoardWithPieces;
 
+        private JPanel buttonsPanel;
+        private JButton cancelExtraJump;
 
         private CheckerBoardSpace[] boardSpaces;
         private GamePiece[] drawnPieces;
@@ -98,21 +100,12 @@ public class CheckerBoard extends JPanel implements MouseListener
 		// the second jump.
 		this.extraJumpMode = false;
 
-                /******************************** Display Characteristics ********************************/
+                /********************************  ********************************/
 
                 this.frame = new JFrame(); // for the first initializeSettings call
                 this.initializeSettings();
 
-                /********************************  ********************************/
 
-
-
-
-
-
-
-
-                /******************************** Initializing Member Variables ********************************/
 
                 // all 64 spaces are stored
                 // only the black one are interactive
@@ -120,28 +113,21 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 this.drawnPieces = new GamePiece[24]; // all of player one's pieces will be placed in this array before player two's pieces
 
-                /********************************  ********************************/
 
                 this.playerOnePiecesLeft = 12;
                 this.playerTwoPiecesLeft = 12;
 
 
-
-                /******************************* Call drawing methods *****************/
-
-
                 // draw the static background
                 this.drawGameBackground();
 
-                this.drawGameBoard(state); // draws the board at its initial state
-
-
-                /****************************************************************/
-
+                // draws the board at its initial state
+                this.drawGameBoard(state);
 
 
 
         }
+
 
 
 
@@ -164,6 +150,9 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
+
+
+
         /**
            Initialie window and container settings. This will
            initialize the "frame", "gameBoard", and
@@ -183,7 +172,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.frame.setVisible(true);
 
                 // set to include toolbar, borders, and container
-                this.frame.setSize(645, 675);
+                this.frame.setSize(710, 710);
 
                 // prevent from resizing
                 this.frame.setResizable(false);
@@ -205,7 +194,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.gameBoardWithPieces.setSize(640, 640);
 
                 // prevent from resizing
-                this.gameBoardWithPieces.setMaximumSize( new Dimension(640, 640) );
+                //this.gameBoardWithPieces.setMaximumSize( new Dimension(640, 640) );
 
                 // 8x8 for checkboard
                 this.gameBoardWithPieces.setLayout( new GridLayout(8,8) );
@@ -213,7 +202,63 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // set black as default background
                 this.gameBoardWithPieces.setBackground(Color.BLACK);
 
+
+                this.buttonsPanel = new JPanel();
+                buttonsPanel.setLayout( new BorderLayout(1,1) );
+
+                this.cancelExtraJump = new JButton("Cancel Extra Jump");
+                this.cancelExtraJump.addActionListener(cancelExtraJumpListener());
+
+                buttonsPanel.add(cancelExtraJump);
+
         }
+
+
+
+
+
+
+                /**
+                   Redraw all of the UI elements. This will remove everything
+                   from the board, then re init everything, then draw the
+                   board state again.
+                 */
+                public void redrawAll()
+                {
+        		// cleanup everything
+        		this.removeAll();
+
+        		// re init everything
+                        this.gameBoard = new JLayeredPane();
+                        this.gameBoard = frame.getLayeredPane();
+                        this.gameBoard.setPreferredSize(new Dimension(640, 640));
+
+                        // re init more stuff
+                        this.gameBoardWithPieces = new Container();
+                        this.gameBoardWithPieces.setSize(640, 640);
+                        //this.gameBoardWithPieces.setMaximumSize( new Dimension(640, 640) );
+                        this.gameBoardWithPieces.setLayout( new GridLayout(8,8) );
+                        this.gameBoardWithPieces.setBackground(Color.BLACK);
+
+                        // re init even more stuff
+                        boardSpaces = new CheckerBoardSpace[64];
+                        drawnPieces = new GamePiece[24]; // all of player one's pieces will
+
+                        // re init more stuff
+                        this.buttonsPanel = new JPanel();
+                        buttonsPanel.setLayout( new BorderLayout(1,1) );
+
+                        this.cancelExtraJump = new JButton("Cancel Extra Jump");
+                        this.cancelExtraJump.addActionListener(cancelExtraJumpListener());
+
+                        buttonsPanel.add(cancelExtraJump);
+
+
+        		// redraw background
+        		this.drawGameBackground();
+
+                        this.drawGameBoard(state); // draws the board at its new state
+                }
 
 
 
@@ -272,39 +317,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void drawGameBoard(CheckerBoardState state) // use for updating display of game board
         {
 
-
-                /******************************** Adding Pieces to Board ********************************/
-
-                // creates the 24 game pieces --> player one's pieces are the first 12, and player two's pieces are second
-		int n = 0;
-                for( CheckerSquare square : state.getSquares())
-                {
-
-			if (square.getPiece().getType() != PieceType.EMPTY)
-                        {
-
-				if (square.getPiece().getPlayer() == Player.ONE)
-                                {
-					drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece().getPlayer());
-				}
-
-                                else if (square.getPiece().getPlayer() == Player.TWO)
-                                {
-					drawnPieces[n++] = new GamePiece(this, Color.LIGHT_GRAY, square.getIndex(), square.getPiece().getPlayer());
-				}
-
-
-                                // set the new piece to King
-                                if (square.getPiece().getType() == PieceType.KING)
-                                {
-                                        // the former value of n
-                                        drawnPieces[n-1].setToKing();
-                                }
-
-			}
-
-                }
-
+                this.makeGamePieces(state); // adds the game pieces to the board
 
 
                 // hold onto the current piece
@@ -372,6 +385,47 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
+        /**
+                Recreates the GamePieces that are remaining on the board
+        */
+        private void makeGamePieces(CheckerBoardState state)
+        {
+
+                // creates the 24 game pieces --> player one's pieces are the first 12, and player two's pieces are second
+                int n = 0;
+                for( CheckerSquare square : state.getSquares())
+                {
+
+                        if (square.getPiece().getType() != PieceType.EMPTY)
+                        {
+
+                                if (square.getPiece().getPlayer() == Player.ONE)
+                                {
+                                        drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece().getPlayer());
+                                }
+
+                                else if (square.getPiece().getPlayer() == Player.TWO)
+                                {
+                                        drawnPieces[n++] = new GamePiece(this, Color.LIGHT_GRAY, square.getIndex(), square.getPiece().getPlayer());
+                                }
+
+
+                                // set the new piece to King
+                                if (square.getPiece().getType() == PieceType.KING)
+                                {
+                                        // the former value of n
+                                        drawnPieces[n-1].setToKing();
+                                }
+
+                        }
+
+                }
+
+        }
+
+
+
+
 
 
 
@@ -423,7 +477,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         */
 	public void showAllowedMoves(CheckerSquare square)
         {
-                // get valid moves from CheckerBoadState
+                // get valid moves from CheckerBoardState
 		List<CheckerMove> moves = this.state.getValidMoves(square);
 
                 // iterate through each move
@@ -478,69 +532,6 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-
-
-        /**
-           Redraw all of the UI elements. This will remove everything
-           from the board, then re init everything, then draw the
-           board state again.
-         */
-        public void redrawAll()
-        {
-		// cleanup everything
-		this.removeAll();
-
-		// re init everything
-                this.gameBoard = new JLayeredPane();
-                this.gameBoard = frame.getLayeredPane();
-                this.gameBoard.setPreferredSize(new Dimension(640, 640));
-
-                // re init more stuff
-                this.gameBoardWithPieces = new Container();
-                this.gameBoardWithPieces.setSize(640, 640);
-                this.gameBoardWithPieces.setMaximumSize( new Dimension(640, 640) );
-                this.gameBoardWithPieces.setLayout( new GridLayout(8,8) );
-                this.gameBoardWithPieces.setBackground(Color.BLACK);
-
-                // re init even more stuff
-                boardSpaces = new CheckerBoardSpace[64];
-                drawnPieces = new GamePiece[24]; // all of player one's pieces will
-
-		// redraw background
-		this.drawGameBackground();
-
-                this.drawGameBoard(state); // draws the board at its new state
-        }
-
-
-
-
-
-
-
-
-        /**
-           Update game pieces with King status where appropriate
-         */
-        public void setKings()
-        {
-
-                for( GamePiece dPiece : drawnPieces )
-                {
-                        if( dPiece != null && dPiece.getPlayer() == getActivePlayer() )
-                        {
-                                if ( state.getSquare( dPiece.getIndex() ).getPiece().getType() == PieceType.KING )
-                                {
-                                        dPiece.setToKing();
-                                }
-                        }
-                }
-
-        }
-
-
-
-
         /**
            Move the piece selected piece to index. Instead of just
            modifying the current board, this will first modify the
@@ -554,6 +545,8 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // disable extra jump mode after movement
 		this.extraJumpMode = false;
 
+                // remove cancelExtraJump button
+                this.frame.getContentPane().remove(buttonsPanel);
                 // calculate targetSquare and create the new "move" in
                 // board Data Types.
 		CheckerSquare targetSquare = this.state.getSquare(index);
@@ -570,7 +563,6 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-
                 // handle the case when an opposing player loses a piece
                 if( move.isDoubleJump() )
                 {
@@ -581,42 +573,17 @@ public class CheckerBoard extends JPanel implements MouseListener
 		// handle extra jumps
 		List<CheckerMove> extraJumps = this.state.getValidDoubleJumps(move.getEnd());
 
+
+
                 // check if the last move was a double jump and that
                 // there is at least one available additional double
                 // jump to use.
 		if (move.isDoubleJump() && extraJumps.size() > 0)
                 {
-                        // lock user out of other moves
-			this.extraJumpMode = true;
+                        // add cancelExtraJump button to display
+                        this.frame.getContentPane().add(buttonsPanel, BorderLayout.PAGE_END);
 
-                        // find the piece that was last moved
-			for (GamePiece piece : this.drawnPieces)
-                        {
-				if (piece != null && piece.getIndex() == move.getEnd().getIndex())
-                                {
-                                        // use end index because the
-                                        // board data type has already
-                                        // executed the move.
-					piece.select();
-                                        // select the piece
-				}
-			}
-
-                        // unhighlight everything
-                        for (CheckerBoardSpace space : this.boardSpaces)
-                        {
-                                if (space != null)
-                                { // make sure it isn't null
-                                        space.dehighlight(); // un highlight it
-                                }
-                        }
-
-                        // highlight each of the extra jumps
-			for (CheckerMove move2 : extraJumps)
-                        {
-				this.boardSpaces[move2.getEnd().getIndex()].highlight();
-			}
-
+                        this.executeExtraJump(move, extraJumps);
 		}
 
                 else
@@ -643,6 +610,104 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 	}
+
+        public void executeExtraJump(CheckerMove move, List<CheckerMove> extraJumps)
+        {
+                // lock user out of other moves
+                this.extraJumpMode = true;
+
+
+                // find the piece that was last moved
+                for (GamePiece piece : this.drawnPieces)
+                {
+                        if (piece != null && piece.getIndex() == move.getEnd().getIndex())
+                        {
+                                // use end index because the
+                                // board data type has already
+                                // executed the move.
+                                piece.select();
+                                // select the piece
+                        }
+                }
+
+                // unhighlight everything
+                for (CheckerBoardSpace space : this.boardSpaces)
+                {
+                        if (space != null)
+                        { // make sure it isn't null
+                                space.dehighlight(); // un highlight it
+                        }
+                }
+
+                // highlight each of the extra jumps
+                for (CheckerMove move2 : extraJumps)
+                {
+                        this.boardSpaces[move2.getEnd().getIndex()].highlight();
+                }
+
+
+        }
+
+
+
+
+        /**
+                Button listener for the cancelExtraJump button
+        */
+        public ActionListener cancelExtraJumpListener()
+        {
+
+                CheckerBoard thisBoard = this;
+
+                ActionListener listener = new ActionListener()
+                {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                                // when cancelExtraJump button is pressed
+                                thisBoard.extraJumpMode = false;
+
+                                // unhighlight everything
+                                for (CheckerBoardSpace space : thisBoard.boardSpaces)
+                                {
+                                        if (space != null)
+                                        { // make sure it isn't null
+                                                space.dehighlight(); // un highlight it
+                                        }
+                                }
+
+                                thisBoard.switchPlayer();
+                        }
+                };
+
+                return listener;
+
+        }
+
+
+
+
+
+
+        /**
+           Update game pieces with King status where appropriate
+         */
+        public void setKings()
+        {
+
+                for( GamePiece dPiece : drawnPieces )
+                {
+                        if( dPiece != null && dPiece.getPlayer() == getActivePlayer() )
+                        {
+                                if ( state.getSquare( dPiece.getIndex() ).getPiece().getType() == PieceType.KING )
+                                {
+                                        dPiece.setToKing();
+                                }
+                        }
+                }
+
+        }
+
+
 
 
         /**
@@ -715,8 +780,18 @@ public class CheckerBoard extends JPanel implements MouseListener
 	}
 
 
+        /**
+           Opens up the win screen
+         */
+        public void endGame()
+        {
+                // get rid of old window if it exists
+                this.frame.dispose();
 
+                // create new window
+                this.frame = new JFrame();
 
+        }
 
 
 
