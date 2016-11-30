@@ -549,6 +549,9 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // disable extra jump mode after movement
 		this.extraJumpMode = false;
 
+                // make sure the cancelExtraJump button is not visible
+                this.buttonsPanel.setVisible(false);
+
 
                 // calculate targetSquare and create the new "move" in
                 // board Data Types.
@@ -562,8 +565,6 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 // tell board to redraw everything
                 this.redrawAll();
-
-
 
 
                 // handle the case when an opposing player loses a piece
