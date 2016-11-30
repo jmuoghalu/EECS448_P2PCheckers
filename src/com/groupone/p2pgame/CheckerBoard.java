@@ -797,15 +797,4 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-        /**
-           Initialize the checker board as a main program.
-         */
-        public static void main(String[] args)
-        {
-                CheckerBoard testBoard = new CheckerBoard();
-        }
-
-
-
-
 }
