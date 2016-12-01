@@ -59,12 +59,9 @@ public class CheckerBoard extends JPanel implements MouseListener
         private int playerOnePiecesLeft;
         private int playerTwoPiecesLeft;
 
-        public CheckerBoardState state;
+        private CheckerBoardState state;
 
         private CheckerSquare selectedSquare;
-
-        private Player activePlayer;
-        private boolean extraJumpMode;
 
         public JLabel whoseTurn;
 
@@ -92,13 +89,6 @@ public class CheckerBoard extends JPanel implements MouseListener
                 super();
 
                 this.state = state;
-
-                // player two goes first
-                this.activePlayer = Player.TWO;
-
-                // set to true when you want to disable everything but
-                // the second jump.
-                this.extraJumpMode = false;
 
                 /********************************  ********************************/
 
@@ -212,7 +202,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 buttonsPanel.add(cancelExtraJump);
                 this.frame.getContentPane().add(buttonsPanel, BorderLayout.PAGE_END);
                 buttonsPanel.setVisible(false);
-
+ 
         }
 
 
@@ -261,7 +251,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // redraw background
                 this.drawGameBackground();
 
-                this.drawGameBoard(state); // draws the board at its new state
+                this.drawGameBoard(this.getState()); // draws the board at its new state
         }
 
 
@@ -442,7 +432,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         {
 
                 // disregard in extra jump mode so we don't cheat
-                if (extraJumpMode)
+                if (this.getState().isInExtraJumpMode())
                 {
                         return;
                 }
@@ -482,7 +472,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void showAllowedMoves(CheckerSquare square)
         {
                 // get valid moves from CheckerBoardState
-                List<CheckerMove> moves = this.state.getValidMoves(square);
+                List<CheckerMove> moves = this.getState().getValidMoves(square);
 
                 // iterate through each move
                 for (CheckerMove move : moves)
@@ -505,10 +495,10 @@ public class CheckerBoard extends JPanel implements MouseListener
         */
         public void setSelected(int index)
         {
-                CheckerSquare square = this.state.getSquare(index);
+                CheckerSquare square = this.getState().getSquare(index);
 
                 // only let active player select
-                if (square.getPiece().getPlayer() == this.activePlayer)
+                if (square.getPiece().getPlayer() == this.getState().getActivePlayer())
                 {
                         this.selectedSquare = square;
 
@@ -521,16 +511,6 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-
-        /**
-           Check if the board is in "extra jump mode".
-           See top for more details.
-           @return Whether or not board is in extra jump mode.
-        */
-        public boolean isInExtraJumpMode()
-        {
-                return this.extraJumpMode;
-        }
 
 
 
@@ -547,7 +527,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void moveTo(int index)
         {
                 // disable extra jump mode after movement
-                this.extraJumpMode = false;
+                this.getState().setExtraJumpMode(false);
 
                 // make sure the cancelExtraJump button is not visible
                 this.buttonsPanel.setVisible(false);
@@ -555,12 +535,12 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 // calculate targetSquare and create the new "move" in
                 // board Data Types.
-                CheckerSquare targetSquare = this.state.getSquare(index);
+                CheckerSquare targetSquare = this.getState().getSquare(index);
                 CheckerMove move = new CheckerMove(this.selectedSquare, targetSquare);
 
 
                 // actually modify the board
-                this.state.executeMove(move);
+                this.getState().executeMove(move);
 
 
                 // tell board to redraw everything
@@ -575,7 +555,7 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
                 // handle extra jumps
-                List<CheckerMove> extraJumps = this.state.getValidDoubleJumps(move.getEnd());
+                List<CheckerMove> extraJumps = this.getState().getValidDoubleJumps(move.getEnd());
 
 
 
@@ -602,7 +582,8 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 // set the GamePiece to King when appropriate
                 // note: at this point the activePlayer member variable has already been switched
-                if( (this.activePlayer == Player.TWO && index > 55) || (this.activePlayer == Player.ONE && index < 8) )
+                if( (this.getState().getActivePlayer() == Player.TWO && index > 55)
+                    || (this.getState().getActivePlayer() == Player.ONE && index < 8) )
                 {
                         for (GamePiece piece : this.drawnPieces)
                         {
@@ -620,7 +601,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void executeExtraJump(CheckerMove move, List<CheckerMove> extraJumps)
         {
                 // lock user out of other moves
-                this.extraJumpMode = true;
+                this.getState().setExtraJumpMode(true);
 
 
                 // find the piece that was last moved
@@ -674,7 +655,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                                         thisBoard.buttonsPanel.setVisible(false);
 
                                         // when cancelExtraJump button is pressed
-                                        thisBoard.extraJumpMode = false;
+                                        thisBoard.getState().setExtraJumpMode(false);
 
 
                                         // deselect all pieces
@@ -718,7 +699,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void pieceRemovedDuringTurn()
         {
 
-                if(this.activePlayer == Player.TWO)
+                if(this.getState().getActivePlayer() == Player.TWO)
                 {
                         this.playerOnePiecesLeft--;
                 }
@@ -741,15 +722,15 @@ public class CheckerBoard extends JPanel implements MouseListener
         {
 
 
-                if (this.activePlayer == Player.ONE  && this.playerTwoPiecesLeft > 0 )
+                if (this.getState().getActivePlayer() == Player.ONE  && this.playerTwoPiecesLeft > 0 )
                 {
-                        this.activePlayer = Player.TWO;
+                        this.getState().setActivePlayer(Player.TWO);
                         this.frame.setTitle("CheckerBoard: (Player Two's Turn) (Pieces Left: " + this.playerTwoPiecesLeft + ")");
                 }
 
-                else if (this.activePlayer == Player.TWO && this.playerOnePiecesLeft > 0 )
+                else if (this.getState().getActivePlayer() == Player.TWO && this.playerOnePiecesLeft > 0 )
                 {
-                        this.activePlayer = Player.ONE;
+                        this.getState().setActivePlayer(Player.ONE);
                         this.frame.setTitle("CheckerBoard: (Player One's Turn) (Pieces Left: " + this.playerOnePiecesLeft + ")");
                 }
 
@@ -764,22 +745,13 @@ public class CheckerBoard extends JPanel implements MouseListener
                         {
                                 this.frame.setTitle("Player One Wins!");
                         }
-                        this.activePlayer = Player.NONE;
+                        this.getState().setActivePlayer(Player.NONE);
 
                 }
         }
 
 
 
-
-        /**
-           Get the currently active player who has control of the
-           board.
-        */
-        public Player getActivePlayer()
-        {
-                return this.activePlayer;
-        }
 
 
         /**
@@ -796,5 +768,12 @@ public class CheckerBoard extends JPanel implements MouseListener
         }
 
 
+        /**
+           Get the state of the checker board.
+           @return the state
+        */
+        public CheckerBoardState getState() {
+                return this.state;
+        }
 
 }

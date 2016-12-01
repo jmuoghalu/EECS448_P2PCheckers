@@ -110,7 +110,7 @@ public class GamePiece extends JPanel implements MouseListener
         public void select()
         {
                 // check if the board's active player is us
-                if (this.board.getActivePlayer() == this.player)
+                if (this.board.getState().getActivePlayer() == this.player)
                 {
                         // setup the halo
                         isPressed=true;
@@ -179,12 +179,12 @@ public class GamePiece extends JPanel implements MouseListener
 	@Override
         public void mousePressed(MouseEvent e)
         {
-                if (!this.board.isInExtraJumpMode())
+                if (!this.board.getState().isInExtraJumpMode())
                 {
                         this.board.clearHighlights();
-                        CheckerSquare square = this.board.state.getSquare(gameBoardIndex);
+                        CheckerSquare square = this.board.getState().getSquare(gameBoardIndex);
 
-                        if(this.board.state.getValidMoves(square).size() != 0)
+                        if(this.board.getState().getValidMoves(square).size() != 0)
                         {
                                 select();
                         }
@@ -206,8 +206,8 @@ public class GamePiece extends JPanel implements MouseListener
         {
 
 
-          CheckerSquare square = this.board.state.getSquare(gameBoardIndex);
-          if(this.board.state.getValidMoves(square).size() != 0)
+          CheckerSquare square = this.board.getState().getSquare(gameBoardIndex);
+          if(this.board.getState().getValidMoves(square).size() != 0)
           {
                   isPressed=true;
                   repaint();
@@ -222,8 +222,8 @@ public class GamePiece extends JPanel implements MouseListener
 	@Override
         public void mouseExited(MouseEvent e)
         {
-          CheckerSquare square = this.board.state.getSquare(gameBoardIndex);
-          if(this.board.state.getValidMoves(square).size() != 0)
+          CheckerSquare square = this.board.getState().getSquare(gameBoardIndex);
+          if(this.board.getState().getValidMoves(square).size() != 0)
           {
 
                   isPressed=false;

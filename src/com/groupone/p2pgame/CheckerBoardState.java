@@ -84,6 +84,8 @@ public class CheckerBoardState
 
     private CheckerSquare[] squares;
 
+    private Player activePlayer;
+    private boolean extraJumpMode;
 
 
 
@@ -125,6 +127,14 @@ public class CheckerBoardState
      */
     public CheckerBoardState()
     {
+
+        // player two goes first
+        this.setActivePlayer(Player.TWO);
+
+        // set to true when you want to disable everything but
+        // the second jump.
+        this.setExtraJumpMode(false);
+
         this.squares = new CheckerSquare[64];
         for (int index = 0; index < this.squares.length; index++)
         {
@@ -483,5 +493,43 @@ public class CheckerBoardState
     }
 
 
+    /**
+       Get the currently active player who has control of the
+       board.
+       @return the active player (P1 or P2 or NONE)
+    */
+    public Player getActivePlayer()
+    {
+        return this.activePlayer;
+    }
+
+
+    /**
+       Set the active player.
+       @param activePlayer The active player to use (P1 or P2 or NONE)
+    */
+    public void setActivePlayer(Player activePlayer)
+    {
+        this.activePlayer = activePlayer;
+    }
+
+    /**
+       Check if the board is in "extra jump mode".
+       See top for more details.
+       @return Whether or not board is in extra jump mode.
+    */
+    public boolean isInExtraJumpMode()
+    {
+        return this.extraJumpMode;
+    }
+
+    /**
+       Set the extra jump mode.
+       @param mode The extra jump mode to use
+     */
+    public void setExtraJumpMode(boolean mode)
+    {
+        this.extraJumpMode = mode;
+    }
 
 }
