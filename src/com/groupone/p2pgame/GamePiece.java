@@ -17,10 +17,9 @@ public class GamePiece extends JPanel implements MouseListener
         private Color kingColor;
         private boolean isPressed;
         private int gameBoardIndex;
-        private Player player;
-        private boolean kingMe;
         private String kingString;
         private CheckerBoard board;
+        private Piece piece;
 
         /**
            Create a new game piece.
@@ -28,19 +27,18 @@ public class GamePiece extends JPanel implements MouseListener
            to send back details once it has been selected.
            @param color The color that this game piece should be.
            @param index The index that this piece occupies.
-           @param player The player that owns this piece.
+           @param piece The piece containing the player and type
         */
-        public GamePiece(CheckerBoard board, Color color, int index, Player player)
+        public GamePiece(CheckerBoard board, Color color, int index, Piece piece)
         {
                 this.addMouseListener(this); // setup mouse listener
                 this.pieceColor = color;
-		this.board = board;
+                this.board = board;
                 this.gameBoardIndex = index;
-                this.player = player;
+                this.piece = piece;
 
                 this.isPressed = false;
 
-                this.kingMe = false;
                 this.kingString = "K";
 
                 if(this.pieceColor == Color.BLUE)
@@ -75,7 +73,7 @@ public class GamePiece extends JPanel implements MouseListener
                         graphics.fillOval(8, 8, 64, 64);
                 }
 
-                if(this.kingMe)
+                if(this.piece.getType() == PieceType.KING)
                 {
                         // draw the king piece
                         graphics.setColor(this.kingColor);
@@ -110,7 +108,7 @@ public class GamePiece extends JPanel implements MouseListener
         public void select()
         {
                 // check if the board's active player is us
-                if (this.board.getState().getActivePlayer() == this.player)
+                if (this.board.getState().getActivePlayer() == this.getPlayer())
                 {
                         // setup the halo
                         isPressed=true;
@@ -150,15 +148,7 @@ public class GamePiece extends JPanel implements MouseListener
          */
         public Player getPlayer()
         {
-                return this.player;
-        }
-
-        /**
-           The piece in question is now designated as a king.
-         */
-        public void setToKing()
-        {
-                this.kingMe = true;
+                return this.piece.getPlayer();
         }
 
 

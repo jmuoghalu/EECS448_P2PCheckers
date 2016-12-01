@@ -395,21 +395,14 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                                 if (square.getPiece().getPlayer() == Player.ONE)
                                 {
-                                        drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece().getPlayer());
+                                        drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece());
                                 }
 
                                 else if (square.getPiece().getPlayer() == Player.TWO)
                                 {
-                                        drawnPieces[n++] = new GamePiece(this, Color.LIGHT_GRAY, square.getIndex(), square.getPiece().getPlayer());
+                                        drawnPieces[n++] = new GamePiece(this, Color.LIGHT_GRAY, square.getIndex(), square.getPiece());
                                 }
 
-
-                                // set the new piece to King
-                                if (square.getPiece().getType() == PieceType.KING)
-                                {
-                                        // the former value of n
-                                        drawnPieces[n-1].setToKing();
-                                }
 
                         }
 
@@ -576,25 +569,6 @@ public class CheckerBoard extends JPanel implements MouseListener
                         // switch off to the other player
                         this.switchPlayer();
                 }
-
-
-
-
-                // set the GamePiece to King when appropriate
-                // note: at this point the activePlayer member variable has already been switched
-                if( (this.getState().getActivePlayer() == Player.TWO && index > 55)
-                    || (this.getState().getActivePlayer() == Player.ONE && index < 8) )
-                {
-                        for (GamePiece piece : this.drawnPieces)
-                        {
-                                // find the correct piece
-                                if (piece != null && piece.getIndex() == index)
-                                {
-                                        piece.setToKing();
-                                }
-                        }
-                }
-
 
         }
 
