@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.*;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
    <p>
@@ -59,7 +60,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         private int playerOnePiecesLeft;
         private int playerTwoPiecesLeft;
 
-        private CheckerBoardState state;
+        private List<CheckerBoardState> states;
 
         private CheckerSquare selectedSquare;
 
@@ -88,9 +89,10 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 super();
 
-                this.state = state;
+                this.states = new ArrayList<CheckerBoardState>();
+                this.states.add(state);
 
-                /********************************  ********************************/
+                /****************************************************************/
 
                 this.frame = new JFrame(); // for the first initializeSettings call
                 this.initializeSettings();
@@ -112,7 +114,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.drawGameBackground();
 
                 // draws the board at its initial state
-                this.drawGameBoard(state);
+                this.drawGameBoard(this.getState());
 
 
 
@@ -533,7 +535,9 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
                 // actually modify the board
-                this.getState().executeMove(move);
+                CheckerBoardState newState = new CheckerBoardState(this.getState());
+                newState.executeMove(move);
+                this.states.add(newState);
 
 
                 // tell board to redraw everything
@@ -572,6 +576,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         }
 
+        /*
+          Setup the extra jump moves.
+          @param move The last move made.
+          @param extraJumps Possible extra jumps to use.
+         */
         public void executeExtraJump(CheckerMove move, List<CheckerMove> extraJumps)
         {
                 // lock user out of other moves
@@ -725,6 +734,12 @@ public class CheckerBoard extends JPanel implements MouseListener
         }
 
 
+        /**
+           Undo a previous move.
+         */
+        public void undo() {
+                this.states.pop();
+        }
 
 
 
@@ -747,7 +762,8 @@ public class CheckerBoard extends JPanel implements MouseListener
            @return the state
         */
         public CheckerBoardState getState() {
-                return this.state;
+              // just use the last state
+              return this.states.get(this.states.size() - 1);
         }
 
 }

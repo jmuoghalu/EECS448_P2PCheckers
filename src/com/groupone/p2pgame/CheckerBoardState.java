@@ -2,6 +2,7 @@ package com.groupone.p2pgame;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
    <p>
@@ -143,6 +144,18 @@ public class CheckerBoardState
     }
 
 
+    /**
+       Copy a previous checker board state
+       @param state CheckerBoardState to copy
+     */
+    public CheckerBoardState(CheckerBoardState state)
+    {
+        this.setActivePlayer(state.getActivePlayer());
+
+        this.setExtraJumpMode(state.isInExtraJumpMode());
+
+        this.squares = Arrays.copyOf(state.squares, 64);
+    }
 
 
     /**
