@@ -197,7 +197,8 @@ public class GamePiece extends JPanel implements MouseListener
 
 
           CheckerSquare square = this.board.getState().getSquare(gameBoardIndex);
-          if(this.board.getState().getValidMoves(square).size() != 0)
+          if(this.board.getState().getValidMoves(square).size() > 0
+             && this.board.getState().getActivePlayer() == square.getPiece().getPlayer())
           {
                   isPressed=true;
                   repaint();
@@ -213,12 +214,8 @@ public class GamePiece extends JPanel implements MouseListener
         public void mouseExited(MouseEvent e)
         {
           CheckerSquare square = this.board.getState().getSquare(gameBoardIndex);
-          if(this.board.getState().getValidMoves(square).size() != 0)
-          {
-
-                  isPressed=false;
-                  repaint();
-          }
+          isPressed=false;
+          repaint();
         }
 
 	@Override
