@@ -1,6 +1,7 @@
 package com.groupone.serverClient;
 
 import java.net.ServerSocket;
+import java.net.InetAddress;
 
 /**
  * The server handles creating "Games" that connect two "Players"
@@ -12,7 +13,8 @@ import java.net.ServerSocket;
  * @author Logan
  *
  */
-public class Server {
+public class Server
+{
 
 	/**
 	 * Begins listening to a port (chosen from tutorial)
@@ -24,12 +26,21 @@ public class Server {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception
+	{
+
 		ServerSocket listener = new ServerSocket(8901);
+		//ServerSocket listener = new ServerSocket(8901, 50, InetAddress.getByName(""));
+
 		System.out.println("Server is Running");
-		try {
+		//System.out.println("Server: " + listener.getInetAddress().toString());
+
+		try
+		{
+
 			//Handles creation of games
-			while (true) {
+			while (true)
+			{
 				//Creates a game to house our players
 				Game game = new Game();
 
@@ -53,11 +64,19 @@ public class Server {
 				player1.start();
 				player2.start();
 			}
-		} catch (Exception e) {
+
+		}
+
+		catch (Exception e)
+		{
 			System.out.println(e);
-		} finally {
+		}
+
+		finally
+		{
 			//housekeeping
 			listener.close();
 		}
+
 	}
 }
