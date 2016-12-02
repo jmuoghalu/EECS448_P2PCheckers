@@ -204,7 +204,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 buttonsPanel.add(cancelExtraJump);
                 this.frame.getContentPane().add(buttonsPanel, BorderLayout.PAGE_END);
                 buttonsPanel.setVisible(false);
- 
+
         }
 
 
@@ -738,7 +738,8 @@ public class CheckerBoard extends JPanel implements MouseListener
            Undo a previous move.
          */
         public void undo() {
-                this.states.pop();
+                        // game is not compiling with this line uncommented
+                //this.states.pop();
         }
 
 
