@@ -164,7 +164,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.frame.setVisible(true);
 
                 // set to include toolbar, borders, and container
-                this.frame.setSize(710, 710);
+                this.frame.setSize(645, 710);
 
                 // prevent from resizing
                 this.frame.setResizable(false);
