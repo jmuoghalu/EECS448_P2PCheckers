@@ -10,9 +10,9 @@ package serverTest;
 public class Game {
 
 	//Player whos move it is (not implemented)
-	Player currentPlayer;
+	GamePlayer currentPlayer;
 	
 	//Other player
-	Player opponent;
+	GamePlayer opponent;
 
 }

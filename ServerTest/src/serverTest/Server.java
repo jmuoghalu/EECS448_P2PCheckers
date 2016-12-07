@@ -25,20 +25,28 @@ public class Server {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		ServerSocket listener = new ServerSocket(8901);
+		
+		//Open up our server socket
+		ServerSocket listener = new ServerSocket(1777);
 		System.out.println("Server is Running");
+		
 		try {
+			
 			//Handles creation of games
 			while (true) {
-				//Creates a game to house our players
+				
+				//Create a game to house our players
 				Game game = new Game();
+				System.out.println("Game Created");
 				
 				//Accepts our player1
-				Player player1 = new Player(listener.accept(), "player1");
+				System.out.println("Waiting for player1");
+				GamePlayer player1 = new GamePlayer(listener.accept(), "player1");
 				System.out.println(player1.name + " Connected");
 				
 				//Accepts our player2
-				Player player2 = new Player(listener.accept(), "player2");
+				System.out.println("Waiting for player2");
+				GamePlayer player2 = new GamePlayer(listener.accept(), "player2");
 				System.out.println(player2.name + " Connected");
 				
 				//Sets the opponents for each player
@@ -52,12 +60,18 @@ public class Server {
 				//begins the player thread
 				player1.start();
 				player2.start();
+				
 			}
+			
 		} catch (Exception e) {
+			
 			System.out.println(e);
+			
 		} finally {
+			
 			//housekeeping
 			listener.close();
+			
 		}
 	}
 }
