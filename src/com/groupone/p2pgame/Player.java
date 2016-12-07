@@ -1,11 +1,13 @@
 package com.groupone.p2pgame;
 
+import java.io.Serializable;
+
 /**
    Player holds identifiers for each player. This is used to store
    data within the GameBoard.
    @see CheckerBoardState
  */
-public enum Player {
+public enum Player implements Serializable {
     /**
        Default value when space is empty.
     */

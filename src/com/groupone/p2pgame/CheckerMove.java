@@ -1,11 +1,13 @@
 package com.groupone.p2pgame;
 
+import java.io.Serializable;
+
 /**
    CheckerMove stores an arbitrary game move that may or may not be
    valid. Each CheckerMove is made up of a start and end square
    position.
  */
-public class CheckerMove
+public class CheckerMove implements Serializable
 {
     private CheckerSquare start;
     private CheckerSquare end;

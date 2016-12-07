@@ -1,11 +1,13 @@
 package com.groupone.p2pgame;
 
+import java.io.Serializable;
+
 /**
    PieceType stores the type of the piece that is being used. This is
    very important because each piece type has different behaviors.
    @see CheckerBoardState
  */
-public enum PieceType {
+public enum PieceType implements Serializable {
     /**
        Default empty value.
      */

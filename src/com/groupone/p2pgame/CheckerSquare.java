@@ -1,9 +1,11 @@
 package com.groupone.p2pgame;
 
+import java.io.Serializable;
+
 /**
    CheckerSquare holds the data of one square in a checkers game.
 */
-public class CheckerSquare
+public class CheckerSquare implements Serializable
 {
     private int index;
     private Piece piece;

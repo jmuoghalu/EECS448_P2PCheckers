@@ -1,10 +1,12 @@
 package com.groupone.p2pgame;
 
+import java.io.Serializable;
+
 /**
    Piece holds information about a single piece. This object will be
    retained even after the piece has moved into a new square.
  */
-public class Piece {
+public class Piece implements Serializable {
     private PieceType type;
     private Player player;
 
