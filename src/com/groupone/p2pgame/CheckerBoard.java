@@ -66,6 +66,9 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         public JLabel whoseTurn;
 
+        // The player who owns the board
+        private Player boardOwner;
+
         /**
            Start a new game board. Without arguments, this will use
            the default starting board with 12 pieces for player one on
@@ -88,6 +91,8 @@ public class CheckerBoard extends JPanel implements MouseListener
         {
 
                 super();
+
+                this.boardOwner = Player.TWO;
 
                 this.states = new ArrayList<CheckerBoardState>();
                 this.states.add(state);
@@ -767,4 +772,12 @@ public class CheckerBoard extends JPanel implements MouseListener
               return this.states.get(this.states.size() - 1);
         }
 
+
+        /**
+           Get the owner of this board.
+           @return the board owner
+        */
+        public Player getBoardOwner() {
+                return this.boardOwner;
+        }
 }

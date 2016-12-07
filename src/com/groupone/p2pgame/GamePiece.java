@@ -108,7 +108,8 @@ public class GamePiece extends JPanel implements MouseListener
         public void select()
         {
                 // check if the board's active player is us
-                if (this.board.getState().getActivePlayer() == this.getPlayer())
+                if (this.board.getState().getActivePlayer() == this.getPlayer()
+                    && this.board.getBoardOwner() == this.board.getState().getActivePlayer())
                 {
                         // setup the halo
                         isPressed=true;
@@ -198,7 +199,8 @@ public class GamePiece extends JPanel implements MouseListener
 
           CheckerSquare square = this.board.getState().getSquare(gameBoardIndex);
           if(this.board.getState().getValidMoves(square).size() > 0
-             && this.board.getState().getActivePlayer() == square.getPiece().getPlayer())
+             && this.board.getState().getActivePlayer() == square.getPiece().getPlayer()
+             && this.board.getBoardOwner() == this.board.getState().getActivePlayer())
           {
                   isPressed=true;
                   repaint();
