@@ -3,6 +3,7 @@ package com.groupone.p2pgame;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.Serializable;
 
 /**
    <p>
@@ -80,7 +81,7 @@ import java.util.Arrays;
      </pre>
 
 */
-public class CheckerBoardState
+public class CheckerBoardState implements Serializable
 {
 
     private CheckerSquare[] squares;

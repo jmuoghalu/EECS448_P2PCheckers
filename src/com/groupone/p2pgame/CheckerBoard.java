@@ -66,6 +66,8 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         public JLabel whoseTurn;
 
+        private Client client;
+
         // The player who owns the board
         private Player boardOwner;
 
@@ -85,42 +87,48 @@ public class CheckerBoard extends JPanel implements MouseListener
         /**
            Setup a checkerboard from an "CheckerBoardState".
            @see CheckerBoardState
-           @param state A valid checker board that has pieces on it.
+           @param client The client to send messages to.
         */
-        public CheckerBoard(CheckerBoardState state)
+        public CheckerBoard(Client client)
         {
 
                 super();
 
-                this.boardOwner = Player.TWO;
+                this.client = client;
+
+                this.boardOwner = this.client.getPlayer();
 
                 this.states = new ArrayList<CheckerBoardState>();
-                this.states.add(state);
+                this.states.add(this.client.getInitialState());
 
                 /****************************************************************/
 
                 this.frame = new JFrame(); // for the first initializeSettings call
                 this.initializeSettings();
 
-
-
-                // all 64 spaces are stored
-                // only the black one are interactive
-                this.boardSpaces = new CheckerBoardSpace[64];
-
-                this.drawnPieces = new GamePiece[24]; // all of player one's pieces will be placed in this array before player two's pieces
-
-
                 this.playerOnePiecesLeft = 12;
                 this.playerTwoPiecesLeft = 12;
 
 
-                // draw the static background
-                this.drawGameBackground();
-
                 // draws the board at its initial state
-                this.drawGameBoard(this.getState());
+                this.redrawAll();
 
+                // wait for other player's turn
+                if (this.boardOwner != this.getState().getActivePlayer()) {
+
+                        try {
+
+                                CheckerBoardState state = this.client.waitForMove();
+                                this.states.add(state);
+
+                                System.out.println("got move");
+                                this.redrawAll();
+
+                        } catch (Exception e) {
+                                System.out.println("Fatal error: " + e);
+                        }
+
+                }
 
 
         }
@@ -571,14 +579,56 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                         this.executeExtraJump(move, extraJumps);
 
+                } else {
+
+                    // switch off to the other player
+                    this.switchPlayer();
+
+                    // send info to other client
+                    try {
+                          this.client.sendBoard(this.getState());
+                          System.out.println("sent board");
+                    } catch (Exception e) {
+                          System.out.println("Fatal error: " + e);
+                    }
+
+
+                    // wait for next move
+                    if (this.getState().getActivePlayer() != this.getBoardOwner()) {
+
+                            // get the next move from the other side
+                            try {
+
+                                    CheckerBoardState state = this.client.waitForMove();
+                                    this.states.add(state);
+
+                                    System.out.println("Got new board.");
+                            } catch (Exception e) {
+                                    System.out.println("Fatal error: " + e);
+                            }
+
+                            this.redrawAll();
+
+                            this.checkWin();
+
+                    }
+
                 }
 
-                else
-                {
-                        // switch off to the other player
-                        this.switchPlayer();
-                }
+        }
 
+        /**
+           Check if one player has won.
+        */
+        public void checkWin() {
+
+                if( this.playerOnePiecesLeft == 0 ) {
+                        this.frame.setTitle("Player Two Wins!");
+                        this.getState().setActivePlayer(Player.NONE);
+                } else if (this.playerTwoPiecesLeft == 0){
+                        this.frame.setTitle("Player One Wins!");
+                        this.getState().setActivePlayer(Player.NONE);
+                }
         }
 
         /*

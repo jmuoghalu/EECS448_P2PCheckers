@@ -13,9 +13,17 @@ public class GameDriver
         {
 
 
-                CheckerBoard checkersGame = new CheckerBoard();
+            try {
 
+                Client client = new Client();
 
+                CheckerBoard checkersGame = new CheckerBoard(client);
+
+            } catch (Exception e) {
+
+                System.out.println("Fatal error: " + e);
+
+            }
 
         }
 
