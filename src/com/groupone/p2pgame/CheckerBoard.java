@@ -72,19 +72,6 @@ public class CheckerBoard extends JPanel implements MouseListener
         private Player boardOwner;
 
         /**
-           Start a new game board. Without arguments, this will use
-           the default starting board with 12 pieces for player one on
-           top, and 12 pieces for player two on bottom.
-        */
-        public CheckerBoard()
-        {
-                this(CheckerBoardState.getStartingBoard());
-        }
-
-
-
-
-        /**
            Setup a checkerboard from an "CheckerBoardState".
            @see CheckerBoardState
            @param client The client to send messages to.
