@@ -793,8 +793,7 @@ public class CheckerBoard extends JPanel implements MouseListener
            Undo a previous move.
          */
         public void undo() {
-                        // game is not compiling with this line uncommented
-                //this.states.pop();
+                this.states.remove(this.states.size() - 1);
         }
 
 
