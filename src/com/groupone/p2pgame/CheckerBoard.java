@@ -100,23 +100,31 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // draws the board at its initial state
                 this.redrawAll();
 
-                // wait for other player's turn
-                if (this.boardOwner != this.getState().getActivePlayer()) {
+                final CheckerBoard thisBoard = this;
 
-                        try {
+                Thread loop = new Thread() {
+                                public void run() {
+                                        while (true) {
+                                                // get the next move from the other side
+                                                try {
 
-                                CheckerBoardState state = this.client.waitForMove();
-                                this.states.add(state);
+                                                        CheckerBoardState state = thisBoard.client.waitForMove();
+                                                        thisBoard.states.add(state);
 
-                                System.out.println("got move");
-                                this.redrawAll();
+                                                        System.out.println("Got new board.");
 
-                        } catch (Exception e) {
-                                System.out.println("Fatal error: " + e);
-                        }
+                                                        thisBoard.redrawAll();
 
-                }
+                                                        thisBoard.checkWin();
+                                                } catch (Exception e) {
+                                                        System.out.println("Fatal error: " + e);
+                                                }
 
+                                        }
+                                }
+                        };
+
+                loop.start();
 
         }
 
@@ -583,33 +591,6 @@ public class CheckerBoard extends JPanel implements MouseListener
                     }
 
 
-                    // wait for next move
-                    if (this.getState().getActivePlayer() != this.getBoardOwner()) {
-
-                            final CheckerBoard thisBoard = this;
-
-                            Thread test = new Thread() {
-                                            public void run() {
-                                                    // get the next move from the other side
-                                                    try {
-
-                                                            CheckerBoardState state = thisBoard.client.waitForMove();
-                                                            thisBoard.states.add(state);
-
-                                                            System.out.println("Got new board.");
-                                                    } catch (Exception e) {
-                                                            System.out.println("Fatal error: " + e);
-                                                    }
-
-                                                    thisBoard.redrawAll();
-
-                                                    thisBoard.checkWin();
-                                            }
-                                    };
-
-                            test.start();
-
-                    }
                 }
 
         }
