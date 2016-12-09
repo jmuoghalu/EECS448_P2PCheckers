@@ -149,6 +149,39 @@ public class CheckerBoardStateTest {
             }
             return check;
         }
+        public static boolean test9() {
+          CheckerBoardState board = CheckerBoardState.getStartingBoard();
+          CheckerSquare original = board.getSquare(40);
+          CheckerSquare moved =board.getSquare(33);
+          CheckerMove testMove = new CheckerMove(original,moved);
+          board.executeMove(testMove);
+          CheckerSquare testPosition[] = board.getSquares();
+          boolean check = false;
+        //  System.out.println(testPosition[33].getPiece().getPlayer());
+          if(testPosition[33].getPiece().getPlayer() == Player.TWO )
+          {
+            check = true;
+          }
+          return check;
+        }
+
+        public static boolean test10() {
+          CheckerBoardState board = CheckerBoardState.getStartingBoard();
+          CheckerSquare original = board.getSquare(19);
+          CheckerSquare moved =board.getSquare(27);
+          CheckerMove testMove = new CheckerMove(original,moved);
+          board.executeMove(testMove);
+          CheckerSquare testPosition[] = board.getSquares();
+          boolean check = false;
+        //  System.out.println(testPosition[33].getPiece().getPlayer());
+          if(testPosition[27].getPiece().getPlayer() == Player.ONE )
+          {
+            check = true;
+          }
+          return check;
+        }
+
+
 
     public static void main(String args[]) {
         System.out.println("starting tests...");
@@ -196,6 +229,15 @@ public class CheckerBoardStateTest {
         } else {
             System.out.println("test 8: Remove Pawn piece from board.. failed");
         }
-
+        if (test9()) {
+            System.out.println("test 9: Able to move P2 piece on board.. succeeded");
+        } else {
+            System.out.println("test 9: Able to move P2 piece on board.. failed");
+        }
+        if (test10()) {
+            System.out.println("test 10: Able to move P1 piece on board.. succeeded");
+        } else {
+            System.out.println("test 10: AAble to move P1 piece on board.. failed");
+        }
     }
 }
