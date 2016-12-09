@@ -571,6 +571,9 @@ public class CheckerBoard extends JPanel implements MouseListener
                     // switch off to the other player
                     this.switchPlayer();
 
+                    this.redrawAll();
+
+
                     // send info to other client
                     try {
                           this.client.sendBoard(this.getState());
@@ -583,23 +586,30 @@ public class CheckerBoard extends JPanel implements MouseListener
                     // wait for next move
                     if (this.getState().getActivePlayer() != this.getBoardOwner()) {
 
-                            // get the next move from the other side
-                            try {
+                            final CheckerBoard thisBoard = this;
 
-                                    CheckerBoardState state = this.client.waitForMove();
-                                    this.states.add(state);
+                            Thread test = new Thread() {
+                                            public void run() {
+                                                    // get the next move from the other side
+                                                    try {
 
-                                    System.out.println("Got new board.");
-                            } catch (Exception e) {
-                                    System.out.println("Fatal error: " + e);
-                            }
+                                                            CheckerBoardState state = thisBoard.client.waitForMove();
+                                                            thisBoard.states.add(state);
 
-                            this.redrawAll();
+                                                            System.out.println("Got new board.");
+                                                    } catch (Exception e) {
+                                                            System.out.println("Fatal error: " + e);
+                                                    }
 
-                            this.checkWin();
+                                                    thisBoard.redrawAll();
+
+                                                    thisBoard.checkWin();
+                                            }
+                                    };
+
+                            test.start();
 
                     }
-
                 }
 
         }
@@ -669,7 +679,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public ActionListener cancelExtraJumpListener()
         {
 
-                CheckerBoard thisBoard = this;
+                final CheckerBoard thisBoard = this;
 
                 ActionListener listener = new ActionListener()
                         {
