@@ -111,8 +111,6 @@ public class CheckerBoard extends JPanel implements MouseListener
                                                         CheckerBoardState state = thisBoard.client.waitForMove();
                                                         thisBoard.states.add(state);
 
-                                                        System.out.println("Got new board.");
-
                                                         thisBoard.redrawAll();
 
                                                         thisBoard.checkWin();
@@ -585,7 +583,6 @@ public class CheckerBoard extends JPanel implements MouseListener
                     // send info to other client
                     try {
                           this.client.sendBoard(this.getState());
-                          System.out.println("sent board");
                     } catch (Exception e) {
                           System.out.println("Fatal error: " + e);
                     }
