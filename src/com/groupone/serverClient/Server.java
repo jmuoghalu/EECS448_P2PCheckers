@@ -24,14 +24,21 @@ public class Server {
 	 *
 	 * If more than two players connect, we create another game for the excess players
 	 *
-	 * @param args
+	 * @param args args[0] should be port number
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
 
+		if (args.length < 1) {
+			System.out.format("Usage: java com.groupone.serverClient.Server <PORT>\n");
+			return;
+		}
+
+		int port = Integer.parseInt(args[0]);
+		
 		//Open up our server socket
-		ServerSocket listener = new ServerSocket(ServerInfo.PORT);
-		System.out.println("Server is Running");
+		ServerSocket listener = new ServerSocket(port);
+		System.out.println("Server is Running on port " + port);
 
 		try {
 

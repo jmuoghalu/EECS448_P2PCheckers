@@ -6,8 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import com.groupone.serverClient.ServerInfo;
-
 /**
  * The client is used to send messages to the server based on the command given
  * from the server these messages will then be passed to the second player
@@ -34,11 +32,11 @@ public class Client
 	 *
 	 * @throws Exception
 	 */
-	public Client() throws Exception
+        public Client(String address, int port) throws Exception
 	{
 
-			//Opens a socket
-		socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
+		//Opens a socket
+		socket = new Socket(address, port);
 		//socket = new Socket(InetAddress.getByName(""), PORT);
 
 		//Opens a BufferedReader to read from the socket

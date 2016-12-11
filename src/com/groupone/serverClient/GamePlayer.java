@@ -21,7 +21,7 @@ public class GamePlayer extends Thread {
 	ObjectInputStream input;
 	ObjectOutputStream output;
 
-  Player name;
+	Player name;
 
 	/**
 	 * Constructor that manages creating the connections for players based on
@@ -45,7 +45,7 @@ public class GamePlayer extends Thread {
 			System.out.println("player created");
 
 			// Send what player this is
-      output.writeObject(this.name);
+			output.writeObject(this.name);
 
 		} catch (IOException e) {
 

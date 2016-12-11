@@ -28,6 +28,8 @@ public class GameDriver extends JPanel
         private JButton endRestartButton;
         private JButton endExitButton; // will close the program
 
+        private JTextField addressField;
+        private JTextField portField;
 
         public GameDriver()
         {
@@ -57,11 +59,11 @@ public class GameDriver extends JPanel
 
 
                 this.beginningConnectPlayerOne = new JButton("Connect As Player One");
-                beginningConnectPlayerOne.setPreferredSize( new Dimension(250,250) );
+                beginningConnectPlayerOne.setPreferredSize( new Dimension(250,200) );
                 beginningConnectPlayerOne.addActionListener(gameBeginningButtonListener());
 
                 this.beginningConnectPlayerTwo = new JButton("Connect As Player Two");
-                beginningConnectPlayerTwo.setPreferredSize( new Dimension(250,250) );
+                beginningConnectPlayerTwo.setPreferredSize( new Dimension(250,200) );
                 beginningConnectPlayerTwo.addActionListener(gameBeginningButtonListener());
 
 
@@ -69,7 +71,6 @@ public class GameDriver extends JPanel
                 beginningButtonsPanel.add(beginningConnectPlayerOne);
                 beginningButtonsPanel.add( new JPanel() ); // empty space
                 beginningButtonsPanel.add(beginningConnectPlayerTwo);
-
 
                 JLabel mainLabel = new JLabel("Welcome to Checkers!", SwingConstants.CENTER);
                 mainLabel.setFont( new Font("Serif", Font.PLAIN, 50) );
@@ -81,6 +82,18 @@ public class GameDriver extends JPanel
                 beginningLabelsPanel.add(instruction);
 
 
+		JPanel serverInfo = new JPanel(new GridLayout(2, 2));
+		JLabel addressLabel = new JLabel("Address");
+		serverInfo.add(addressLabel);
+		this.addressField = new JTextField(15);
+		this.addressField.setText("69.23.122.239");
+		serverInfo.add(this.addressField);
+		JLabel portLabel = new JLabel("Port");
+		serverInfo.add(portLabel);
+		this.portField = new JTextField(6);
+		this.portField.setText("10200");
+		serverInfo.add(this.portField);
+		frame.add(serverInfo, BorderLayout.SOUTH);
 
                 frame.add(beginningLabelsPanel, BorderLayout.NORTH);
                 frame.add(beginningButtonsPanel, BorderLayout.CENTER);
@@ -158,6 +171,7 @@ public class GameDriver extends JPanel
 
 
 
+		GameDriver self = this;
                 ActionListener listener = new ActionListener()
                 {
 
@@ -166,7 +180,10 @@ public class GameDriver extends JPanel
 
                                 try
                                 {
-                                        Client client = new Client();
+					String address = self.addressField.getText();
+				        String port = self.portField.getText();
+
+				        Client client = new Client(address, Integer.parseInt(port));
                                         CheckerBoard checkersGame = new CheckerBoard(client);
                                 }
                                 catch (Exception e)
