@@ -57,8 +57,9 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         private CheckerBoardSpace[] boardSpaces;
         private GamePiece[] drawnPieces;
-        private int playerOnePiecesLeft;
-        private int playerTwoPiecesLeft;
+
+                // array of the player pieces
+        private int[] playerPiecesLeft;
 
         private List<CheckerBoardState> states;
 
@@ -70,6 +71,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         // The player who owns the board
         private Player boardOwner;
+        private Player boardOpponent;
+        private int activePlayerInt;
+
+
+        private String frameTitle;
 
         /**
            Setup a checkerboard from an "CheckerBoardState".
@@ -83,7 +89,20 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 this.client = client;
 
+
                 this.boardOwner = this.client.getPlayer();
+                if(this.boardOwner == Player.TWO)
+                {
+                        this.boardOpponent = Player.ONE;
+                }
+                else
+                {
+                        this.boardOpponent = Player.TWO;
+                }
+                this.activePlayerInt = 2; // Player Two will have the first move
+
+
+
 
                 this.states = new ArrayList<CheckerBoardState>();
                 this.states.add(this.client.getInitialState());
@@ -93,8 +112,11 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.frame = new JFrame(); // for the first initializeSettings call
                 this.initializeSettings();
 
-                this.playerOnePiecesLeft = 12;
-                this.playerTwoPiecesLeft = 12;
+                this.playerPiecesLeft = new int[3];
+                playerPiecesLeft[0] = 0; // represents Player.NONE
+                playerPiecesLeft[1] = 12; // represents Player.ONE
+                playerPiecesLeft[2] = 12; // represents Player.TWO
+
 
 
                 // draws the board at its initial state
@@ -175,8 +197,18 @@ public class CheckerBoard extends JPanel implements MouseListener
                 // prevent from resizing
                 this.frame.setResizable(false);
 
-                // setup title
-                this.frame.setTitle("Begin Game (Player Two Has First Move)");
+
+
+                if(this.boardOwner == Player.TWO)
+                {
+                        this.frameTitle = "Begin Game (You have the first move.)";
+                }
+                else
+                {
+                        this.frameTitle = "Begin Game (Your opponent has the first move.)";
+                }
+
+                this.frame.setTitle(this.frameTitle);
                 this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -597,10 +629,10 @@ public class CheckerBoard extends JPanel implements MouseListener
         */
         public void checkWin() {
 
-                if( this.playerOnePiecesLeft == 0 ) {
+                if( this.playerPiecesLeft[1] == 0 ) {
                         this.frame.setTitle("Player Two Wins!");
                         this.getState().setActivePlayer(Player.NONE);
-                } else if (this.playerTwoPiecesLeft == 0){
+                } else if (this.playerPiecesLeft[2] == 0){
                         this.frame.setTitle("Player One Wins!");
                         this.getState().setActivePlayer(Player.NONE);
                 }
@@ -714,11 +746,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 if(this.getState().getActivePlayer() == Player.TWO)
                 {
-                        this.playerOnePiecesLeft--;
+                        this.playerPiecesLeft[1]--;
                 }
                 else
                 {
-                        this.playerTwoPiecesLeft--;
+                        this.playerPiecesLeft[2]--;
                 }
 
         }
@@ -734,23 +766,24 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void switchPlayer()
         {
 
+                // ordinal returns "1" for Player.ONE and "2" for Player.TWO; zero otherwise
 
-                if (this.getState().getActivePlayer() == Player.ONE  && this.playerTwoPiecesLeft > 0 )
+                if (this.getState().getActivePlayer() == this.boardOwner && this.playerPiecesLeft[this.boardOwner.ordinal()] > 0 )
                 {
-                        this.getState().setActivePlayer(Player.TWO);
-                        this.frame.setTitle("CheckerBoard: (Player Two's Turn) (Pieces Left: " + this.playerTwoPiecesLeft + ")");
+                        this.frame.setTitle("Opponent's Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
+                        this.getState().setActivePlayer(this.boardOpponent);
                 }
 
-                else if (this.getState().getActivePlayer() == Player.TWO && this.playerOnePiecesLeft > 0 )
+                else if (this.playerPiecesLeft[this.boardOpponent.ordinal()] > 0 )
                 {
-                        this.getState().setActivePlayer(Player.ONE);
-                        this.frame.setTitle("CheckerBoard: (Player One's Turn) (Pieces Left: " + this.playerOnePiecesLeft + ")");
+                        this.frame.setTitle("Your Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
+                        this.getState().setActivePlayer(this.boardOwner);
                 }
 
                 else
                 {
 
-                        if( this.playerOnePiecesLeft == 0 )
+                        if( this.playerPiecesLeft[1] == 0 )
                         {
                                 this.frame.setTitle("Player Two Wins!");
                         }
@@ -804,4 +837,16 @@ public class CheckerBoard extends JPanel implements MouseListener
         public Player getBoardOwner() {
                 return this.boardOwner;
         }
+
+
+        /**
+                Update the board's title to acknowledge each player's move
+        */
+        public void updateBoardTitle()
+        {
+
+        }
+
+
+
 }
