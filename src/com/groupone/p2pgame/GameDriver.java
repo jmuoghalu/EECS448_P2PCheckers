@@ -106,7 +106,7 @@ public class GameDriver extends JPanel
         }
 
 
-        public void gameEnd()
+        public void gameEndingScreen()
         {
 
                 this.frame = new JFrame("Checkers");
@@ -116,13 +116,15 @@ public class GameDriver extends JPanel
                 this.endMainPanel = new JPanel();
 
 
-                this.endRestartButton = new JButton("Restart");
+                this.endRestartButton = new JButton();
+                this.endRestartButton.setText("Restart");
                 endRestartButton.setPreferredSize( new Dimension(180, 180) );
                 endRestartButton.setFont( new Font("Times-Roman" , Font.PLAIN, 30) );
                 endRestartButton.addActionListener(gameEndButtonListener());
 
 
-                this.endExitButton = new JButton("Exit");
+                this.endExitButton = new JButton();
+                this.endExitButton.setText("Exit");
                 endExitButton.setPreferredSize( new Dimension(180, 180) );
                 endExitButton.setFont( new Font("Times-Roman" , Font.PLAIN, 30) );
                 endExitButton.addActionListener(gameEndButtonListener());
@@ -209,16 +211,7 @@ public class GameDriver extends JPanel
         private ActionListener gameEndButtonListener()
         {
 
-                JButton whichButton;
-                if( this.endRestartButton.getModel().isPressed() )
-                {
-                        whichButton = this.endRestartButton;
-                }
-                else
-                {
-                        whichButton = this.endExitButton;
-                }
-
+                GameDriver self = this;
 
 
                 ActionListener listener = new ActionListener()
@@ -227,15 +220,15 @@ public class GameDriver extends JPanel
                         public void actionPerformed(ActionEvent event)
                         {
 
-                                if( whichButton.getText().equals("Restart") )
+                                if( event.getSource() == self.endRestartButton )
                                 {
-                                        // open the GameBeginning JFrame
+                                        self.frame.dispose();
+                                        self.gameBeginningScreen();
                                 }
 
                                 else // the button pressed was the exit button
                                 {
-                                        // disconnect the server and clients
-                                        // close the app
+                                        self.frame.dispose();
                                 }
 
                         }
@@ -287,7 +280,7 @@ public class GameDriver extends JPanel
                 catch (Exception e)
                 {
                         System.out.println("Fatal error: " + e);
-                        
+
                 }
 
 
