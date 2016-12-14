@@ -622,9 +622,11 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
                     // send info to other client
-                    try {
+                    try
+                    {
                           this.client.sendBoard(this.getState());
-                    } catch (Exception e) {
+                    } catch (Exception e)
+                    {
                           System.out.println("Fatal error: " + e);
                     }
 
@@ -703,42 +705,52 @@ public class CheckerBoard extends JPanel implements MouseListener
                 final CheckerBoard thisBoard = this;
 
                 ActionListener listener = new ActionListener()
+                {
+
+                        public void actionPerformed(ActionEvent e)
                         {
-                                public void actionPerformed(ActionEvent e)
+
+                                // remove button from sight when it is pressed
+                                thisBoard.buttonsPanel.setVisible(false);
+
+                                // when cancelExtraJump button is pressed
+                                thisBoard.getState().setExtraJumpMode(false);
+
+
+                                // deselect all pieces
+                                for (GamePiece piece : thisBoard.drawnPieces)
                                 {
-
-                                        // remove button from sight when it is pressed
-                                        thisBoard.buttonsPanel.setVisible(false);
-
-                                        // when cancelExtraJump button is pressed
-                                        thisBoard.getState().setExtraJumpMode(false);
-
-
-                                        // deselect all pieces
-                                        for (GamePiece piece : thisBoard.drawnPieces)
+                                        if (piece != null)
                                         {
-                                                if (piece != null)
-                                                {
-                                                        // use end index because the
-                                                        // board data type has already
-                                                        // executed the move.
-                                                        piece.deselect();
-                                                        // select the piece
-                                                }
+                                                // use end index because the
+                                                // board data type has already
+                                                // executed the move.
+                                                piece.deselect();
+                                                // select the piece
                                         }
-
-                                        // unhighlight everything
-                                        for (CheckerBoardSpace space : thisBoard.boardSpaces)
-                                        {
-                                                if (space != null)
-                                                { // make sure it isn't null
-                                                        space.dehighlight(); // un highlight it
-                                                }
-                                        }
-
-                                        thisBoard.switchPlayer();
                                 }
-                        };
+
+                                // unhighlight everything
+                                for (CheckerBoardSpace space : thisBoard.boardSpaces)
+                                {
+                                        if (space != null)
+                                        { // make sure it isn't null
+                                                space.dehighlight(); // un highlight it
+                                        }
+                                }
+
+                                thisBoard.switchPlayer();
+
+                                try
+                                {
+                                      thisBoard.client.sendBoard(thisBoard.getState());
+                                }
+                                catch (Exception exc)
+                                {
+                                      System.out.println("Fatal error: " + exc);
+                                }
+                        }
+                };
 
                 return listener;
 
