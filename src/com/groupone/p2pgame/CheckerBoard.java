@@ -292,6 +292,9 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.drawGameBackground();
 
                 this.drawGameBoard(this.getState()); // draws the board at its new state
+
+                this.updateBoardTitle();
+
         }
 
 
@@ -420,10 +423,15 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
         /**
-           Recreates the GamePieces that are remaining on the board
+           Recreates the GamePieces that are remaining on the board and resets the playerPiecesLeft counts
         */
         private void makeGamePieces(CheckerBoardState state)
         {
+
+                        // resets the playerPiecesLeft indices
+                this.playerPiecesLeft[1] = 0;
+                this.playerPiecesLeft[2] = 0;
+
 
                 // creates the 24 game pieces --> player one's pieces are the first 12, and player two's pieces are second
                 int n = 0;
@@ -436,11 +444,13 @@ public class CheckerBoard extends JPanel implements MouseListener
                                 if (square.getPiece().getPlayer() == Player.ONE)
                                 {
                                         drawnPieces[n++] = new GamePiece(this, Color.BLUE, square.getIndex(), square.getPiece());
+                                        this.playerPiecesLeft[1]++;
                                 }
 
                                 else if (square.getPiece().getPlayer() == Player.TWO)
                                 {
                                         drawnPieces[n++] = new GamePiece(this, Color.LIGHT_GRAY, square.getIndex(), square.getPiece());
+                                        this.playerPiecesLeft[2]++;
                                 }
 
 
@@ -449,7 +459,6 @@ public class CheckerBoard extends JPanel implements MouseListener
                 }
 
         }
-
 
 
 
@@ -622,6 +631,8 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 }
 
+
+
         }
 
         /**
@@ -770,37 +781,27 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 if (this.getState().getActivePlayer() == this.boardOwner && this.playerPiecesLeft[this.boardOwner.ordinal()] > 0 )
                 {
-                        this.frame.setTitle("Opponent's Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
                         this.getState().setActivePlayer(this.boardOpponent);
                 }
 
                 else if (this.playerPiecesLeft[this.boardOpponent.ordinal()] > 0 )
                 {
-                        this.frame.setTitle("Your Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
                         this.getState().setActivePlayer(this.boardOwner);
                 }
 
                 else
                 {
-
-                        if( this.playerPiecesLeft[1] == 0 )
-                        {
-                                this.frame.setTitle("Player Two Wins!");
-                        }
-                        else
-                        {
-                                this.frame.setTitle("Player One Wins!");
-                        }
                         this.getState().setActivePlayer(Player.NONE);
-
                 }
+
         }
 
 
         /**
            Undo a previous move.
          */
-        public void undo() {
+        public void undo()
+        {
                 this.states.remove(this.states.size() - 1);
         }
 
@@ -839,12 +840,39 @@ public class CheckerBoard extends JPanel implements MouseListener
         }
 
 
+
+
         /**
                 Update the board's title to acknowledge each player's move
         */
         public void updateBoardTitle()
         {
 
+                // ordinal returns "1" for Player.ONE and "2" for Player.TWO; zero otherwise
+
+                if (this.getState().getActivePlayer() == this.boardOwner && this.playerPiecesLeft[this.boardOwner.ordinal()] > 0 )
+                {
+                        this.frame.setTitle("Your Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
+                }
+
+                else if( this.getState().getActivePlayer() == this.boardOpponent && this.playerPiecesLeft[this.boardOpponent.ordinal()] > 0 )
+                {
+                        this.frame.setTitle("Opponent's Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
+                }
+
+                else
+                {
+
+                        if( this.playerPiecesLeft[1] == 0 )
+                        {
+                                this.frame.setTitle("Player Two Wins!");
+                        }
+                        else
+                        {
+                                this.frame.setTitle("Player One Wins!");
+                        }
+
+                }
         }
 
 
