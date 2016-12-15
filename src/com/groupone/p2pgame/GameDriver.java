@@ -201,7 +201,7 @@ public class GameDriver extends JPanel
 
 
 
-		GameDriver self = this;
+		final GameDriver self = this;
                 ActionListener listener = new ActionListener()
                 {
 
@@ -290,7 +290,7 @@ public class GameDriver extends JPanel
         private ActionListener testSuiteButtonListener()
         {
 
-                GameDriver self = this;
+                final GameDriver self = this;
                 ActionListener listener = new ActionListener()
                 {
 
@@ -316,7 +316,7 @@ public class GameDriver extends JPanel
         private ActionListener gameEndButtonListener()
         {
 
-                GameDriver self = this;
+                final GameDriver self = this;
 
 
                 ActionListener listener = new ActionListener()
