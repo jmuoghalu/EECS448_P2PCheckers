@@ -13,3 +13,5 @@
 - The game board sometimes will not be positioned symmetrically within the application window.
 
 - The "Exit" button only closes the JFrame, and is not ending the Checkers program correctly.
+
+- Closing the server connection causes the Checkers game to endlessly print errors to the terminal.
