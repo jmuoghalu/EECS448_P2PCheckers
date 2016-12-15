@@ -68,6 +68,7 @@ public class CheckerBoard extends JPanel implements MouseListener
         public JLabel whoseTurn;
 
         private Client client;
+        private GameDriver gameDriver;
 
         // The player who owns the board
         private Player boardOwner;
@@ -76,11 +77,10 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
         private String frameTitle;
+        private String playerColor;
 
 
-
-
-        public boolean isGameOver;
+        private boolean isGameOver;
 
 
 
@@ -92,21 +92,24 @@ public class CheckerBoard extends JPanel implements MouseListener
            @see CheckerBoardState
            @param client The client to send messages to.
         */
-        public CheckerBoard(Client client)
+        public CheckerBoard(Client client, GameDriver gameDriver)
         {
 
                 super();
 
                 this.client = client;
+                this.gameDriver = gameDriver;
 
 
                 this.boardOwner = this.client.getPlayer();
                 if(this.boardOwner == Player.TWO)
                 {
+                        this.playerColor = "Gray";
                         this.boardOpponent = Player.ONE;
                 }
                 else
                 {
+                        this.playerColor = "Blue";
                         this.boardOpponent = Player.TWO;
                 }
                 this.activePlayerInt = 2; // Player Two will have the first move
@@ -850,7 +853,7 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 if (this.getState().getActivePlayer() == this.boardOwner && this.playerPiecesLeft[this.boardOwner.ordinal()] > 0 )
                 {
-                        this.frame.setTitle("Your Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
+                        this.frame.setTitle("Your Turn (" + this.playerColor + ") (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
                 }
 
                 else if( this.getState().getActivePlayer() == this.boardOpponent && this.playerPiecesLeft[this.boardOpponent.ordinal()] > 0 )
@@ -861,14 +864,16 @@ public class CheckerBoard extends JPanel implements MouseListener
                 else
                 {
 
-                        if( this.playerPiecesLeft[1] == 0 )
+                        if( this.playerPiecesLeft[ this.boardOwner.ordinal() ] == 0 )
                         {
-                                this.frame.setTitle("Player Two Wins!");
+                                this.frame.setTitle("You Lose!");
                         }
                         else
                         {
-                                this.frame.setTitle("Player One Wins!");
+                                this.frame.setTitle("You Win!");
                         }
+                        this.isGameOver = true;
+                        this.endGame();
 
                 }
 
@@ -886,16 +891,15 @@ public class CheckerBoard extends JPanel implements MouseListener
         public void endGame()
         {
 
-                if( this.playerPiecesLeft[1] == 0 )
+                if( this.isGameOver )
                 {
-                        this.frame.setTitle("Player Two Wins!");
-                        this.getState().setActivePlayer(Player.NONE);
-                }
+                        this.frame.dispose();
 
-                else if (this.playerPiecesLeft[2] == 0)
-                {
-                        this.frame.setTitle("Player One Wins!");
-                        this.getState().setActivePlayer(Player.NONE);
+                        if(this.boardOwner == Player.ONE)
+                        {
+                                this.gameDriver.getFrame().dispose();
+                                this.gameDriver.gameEndingScreen();
+                        }
                 }
 
         }

@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -59,6 +59,9 @@ public class GameDriver extends JPanel
 
                 this.connectMessageOne = "";
                 this.connectMessageTwo = "";
+
+                this.firstGame = null;
+                this.secondGame = null;
 
         }
 
@@ -172,16 +175,31 @@ public class GameDriver extends JPanel
         }
 
 
+/*
 
-
+        /**
+                GameDriver will freeze while the two-player game is running, and will
 
         private void gameRunning()
         {
 
+                while( !this.firstGame.checkGameOver() )
+                {
+                        try
+                        {
+                                Thread.sleep(5); //checks the game if the game is over every five seconds
+                        }
+                        catch(Exception exc)
+                        {
+
+                        }
+
+                }
+                this.gameEndingScreen();
 
 
         }
-
+*/
 
 
 
@@ -213,7 +231,7 @@ public class GameDriver extends JPanel
         				        String port = self.portField.getText();
 
                                                 Client client = new Client(address, Integer.parseInt(port));
-                                                CheckerBoard checkersGame = checkersGame = new CheckerBoard(client);
+                                                CheckerBoard checkersGame = checkersGame = new CheckerBoard(client, self);
 
 
                                                 if( self.connectMessageOne == "")
@@ -238,21 +256,21 @@ public class GameDriver extends JPanel
                                                 }
 
 
+                                                        // changes the text on the screen buttons to give the user a hint as to what is going on
                                                 if( event.getSource() == self.beginningFirstConnectButton )
                                                 {
-
                                                         self.beginningFirstConnectButton.setText(self.connectMessageOne);
                                                         self.beginningSecondConnectButton.setText(self.connectMessageTwo);
                                                         self.beginningFirstConnectButton.setEnabled(false);
-
                                                 }
                                                 else // the "Connect Player Two" button was clicked
                                                 {
-
                                                         self.beginningSecondConnectButton.setText(self.connectMessageOne);
                                                         self.beginningFirstConnectButton.setText(self.connectMessageTwo);
                                                         self.beginningSecondConnectButton.setEnabled(false);
                                                 }
+
+
 
                                         }
                                         catch (Exception e)
@@ -297,6 +315,8 @@ public class GameDriver extends JPanel
 
                                 else // the button pressed was the exit button
                                 {
+                                        //self.firstGame.getClient().close();
+                                        //self.secondGame.getClient().close();
                                         self.frame.dispose();
                                 }
 
@@ -312,7 +332,13 @@ public class GameDriver extends JPanel
 
 
 
-
+        /**
+                return GameDriver's JFrame
+        */
+        public JFrame getFrame()
+        {
+                return this.frame;
+        }
 
 
 
