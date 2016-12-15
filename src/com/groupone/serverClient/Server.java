@@ -35,7 +35,7 @@ public class Server {
 		}
 
 		int port = Integer.parseInt(args[0]);
-		
+
 		//Open up our server socket
 		ServerSocket listener = new ServerSocket(port);
 		System.out.println("Server is Running on port " + port);

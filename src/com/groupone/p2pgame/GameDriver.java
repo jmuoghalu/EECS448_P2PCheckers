@@ -20,8 +20,8 @@ public class GameDriver extends JPanel
 
         private JPanel beginningLabelsPanel;
         private JPanel beginningButtonsPanel;
-        private JButton beginningConnectPlayerOne;
-        private JButton beginningConnectPlayerTwo;
+        private JButton beginningFirstConnectButton;
+        private JButton beginningSecondConnectButton;
 
 
         private JPanel endMainPanel;
@@ -31,6 +31,17 @@ public class GameDriver extends JPanel
         private JTextField addressField;
         private JTextField portField;
 
+
+        private CheckerBoard firstGame;
+        private CheckerBoard secondGame;
+
+        private boolean playerOneConnected;
+        private boolean playerTwoConnected;
+
+        private String connectMessageOne;
+        private String connectMessageTwo;
+
+
         public GameDriver()
         {
                 this.frame = new JFrame();
@@ -38,10 +49,17 @@ public class GameDriver extends JPanel
                 this.beginningButtonsPanel = new JPanel();
                 this.endMainPanel = new JPanel();
 
-                this.beginningConnectPlayerOne = new JButton();
-                this.beginningConnectPlayerTwo = new JButton();
+                this.beginningFirstConnectButton = new JButton();
+                this.beginningSecondConnectButton = new JButton();
                 this.endRestartButton = new JButton();
                 this.endExitButton = new JButton();
+
+                this.playerOneConnected = false;
+                this.playerTwoConnected = false;
+
+                this.connectMessageOne = "";
+                this.connectMessageTwo = "";
+
         }
 
 
@@ -58,19 +76,19 @@ public class GameDriver extends JPanel
                 this.beginningButtonsPanel = new JPanel();
 
 
-                this.beginningConnectPlayerOne = new JButton("Connect As Player One");
-                beginningConnectPlayerOne.setPreferredSize( new Dimension(250,200) );
-                beginningConnectPlayerOne.addActionListener(gameBeginningButtonListener());
+                this.beginningFirstConnectButton = new JButton("Connect");
+                beginningFirstConnectButton.setPreferredSize( new Dimension(250,200) );
+                beginningFirstConnectButton.addActionListener(gameBeginningButtonListener());
 
-                this.beginningConnectPlayerTwo = new JButton("Connect As Player Two");
-                beginningConnectPlayerTwo.setPreferredSize( new Dimension(250,200) );
-                beginningConnectPlayerTwo.addActionListener(gameBeginningButtonListener());
+                this.beginningSecondConnectButton = new JButton("Connect");
+                beginningSecondConnectButton.setPreferredSize( new Dimension(250,200) );
+                beginningSecondConnectButton.addActionListener(gameBeginningButtonListener());
 
 
 
-                beginningButtonsPanel.add(beginningConnectPlayerOne);
+                beginningButtonsPanel.add(beginningFirstConnectButton);
                 beginningButtonsPanel.add( new JPanel() ); // empty space
-                beginningButtonsPanel.add(beginningConnectPlayerTwo);
+                beginningButtonsPanel.add(beginningSecondConnectButton);
 
                 JLabel mainLabel = new JLabel("Welcome to Checkers!", SwingConstants.CENTER);
                 mainLabel.setFont( new Font("Serif", Font.PLAIN, 50) );
@@ -86,8 +104,12 @@ public class GameDriver extends JPanel
 		JLabel addressLabel = new JLabel("Address");
 		serverInfo.add(addressLabel);
 		this.addressField = new JTextField(15);
-		this.addressField.setText("69.23.122.239");
-		serverInfo.add(this.addressField);
+
+
+                this.addressField.setText("localhost");
+		//this.addressField.setText("69.23.122.239");
+
+                serverInfo.add(this.addressField);
 		JLabel portLabel = new JLabel("Port");
 		serverInfo.add(portLabel);
 		this.portField = new JTextField(6);
@@ -153,23 +175,18 @@ public class GameDriver extends JPanel
 
 
 
-        private ActionListener gameBeginningButtonListener()
+        private void gameRunning()
         {
 
 
-                JButton oneButton = this.beginningConnectPlayerOne;
-                JButton twoButton = this.beginningConnectPlayerTwo;
-                JButton whichButton;
+
+        }
 
 
-                if( oneButton.getModel().isPressed() )
-                {
-                        whichButton = oneButton;
-                }
-                else // otherwise, it was player two's button that was pressed
-                {
-                        whichButton = twoButton;
-                }
+
+
+        private ActionListener gameBeginningButtonListener()
+        {
 
 
 
@@ -180,17 +197,69 @@ public class GameDriver extends JPanel
                         public void actionPerformed(ActionEvent event)
                         {
 
-                                try
+                                if(false /*CHANGE THIS FOR THE TESTING BUTTON*/)
                                 {
-					String address = self.addressField.getText();
-				        String port = self.portField.getText();
 
-				        Client client = new Client(address, Integer.parseInt(port));
-                                        CheckerBoard checkersGame = new CheckerBoard(client);
+
                                 }
-                                catch (Exception e)
+
+                                else
                                 {
-                                        System.out.println("Fatal error: " + e);
+
+                                        try
+                                        {
+
+        					String address = self.addressField.getText();
+        				        String port = self.portField.getText();
+
+                                                Client client = new Client(address, Integer.parseInt(port));
+                                                CheckerBoard checkersGame = checkersGame = new CheckerBoard(client);
+
+
+                                                if( self.connectMessageOne == "")
+                                                {
+                                                        self.connectMessageOne = "Player One Connected";
+                                                        self.connectMessageTwo = "Connect As Player Two";
+                                                }
+                                                else if( connectMessageOne == "Player One Connected") // otherwise, it was player two's button that was pressed
+                                                {
+                                                        self.connectMessageOne = "Player Two Connected";
+                                                        self.connectMessageTwo = "Player One Connected";
+                                                }
+
+
+                                                if( self.firstGame == null)
+                                                {
+                                                        self.firstGame = checkersGame;
+                                                }
+                                                else
+                                                {
+                                                        self.secondGame = checkersGame;
+                                                }
+
+
+                                                if( event.getSource() == self.beginningFirstConnectButton )
+                                                {
+
+                                                        self.beginningFirstConnectButton.setText(self.connectMessageOne);
+                                                        self.beginningSecondConnectButton.setText(self.connectMessageTwo);
+                                                        self.beginningFirstConnectButton.setEnabled(false);
+
+                                                }
+                                                else // the "Connect Player Two" button was clicked
+                                                {
+
+                                                        self.beginningSecondConnectButton.setText(self.connectMessageOne);
+                                                        self.beginningFirstConnectButton.setText(self.connectMessageTwo);
+                                                        self.beginningSecondConnectButton.setEnabled(false);
+                                                }
+
+                                        }
+                                        catch (Exception e)
+                                        {
+                                                System.out.println("Fatal error: " + e);
+                                        }
+
                                 }
 
                         }

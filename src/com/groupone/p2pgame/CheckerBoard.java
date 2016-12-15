@@ -77,6 +77,16 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         private String frameTitle;
 
+
+
+
+        public boolean isGameOver;
+
+
+
+
+
+
         /**
            Setup a checkerboard from an "CheckerBoardState".
            @see CheckerBoardState
@@ -135,7 +145,7 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                                                         thisBoard.redrawAll();
 
-                                                        thisBoard.checkWin();
+                                                        thisBoard.endGame();
                                                 } catch (Exception e) {
                                                         System.out.println("Fatal error: " + e);
                                                 }
@@ -192,7 +202,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                 this.frame.setVisible(true);
 
                 // set to include toolbar, borders, and container
-                this.frame.setSize(645, 710);
+                this.frame.setSize(645, 700);
 
                 // prevent from resizing
                 this.frame.setResizable(false);
@@ -637,19 +647,6 @@ public class CheckerBoard extends JPanel implements MouseListener
 
         }
 
-        /**
-           Check if one player has won.
-        */
-        public void checkWin() {
-
-                if( this.playerPiecesLeft[1] == 0 ) {
-                        this.frame.setTitle("Player Two Wins!");
-                        this.getState().setActivePlayer(Player.NONE);
-                } else if (this.playerPiecesLeft[2] == 0){
-                        this.frame.setTitle("Player One Wins!");
-                        this.getState().setActivePlayer(Player.NONE);
-                }
-        }
 
         /*
           Setup the extra jump moves.
@@ -819,18 +816,7 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
 
-        /**
-           Opens up the win screen
-        */
-        public void endGame()
-        {
-                // get rid of old window if it exists
-                this.frame.dispose();
 
-                // create new window
-                this.frame = new JFrame();
-
-        }
 
 
         /**
@@ -885,6 +871,33 @@ public class CheckerBoard extends JPanel implements MouseListener
                         }
 
                 }
+
+        }
+
+
+
+
+
+
+
+        /**
+           Check if one player has won.
+        */
+        public void endGame()
+        {
+
+                if( this.playerPiecesLeft[1] == 0 )
+                {
+                        this.frame.setTitle("Player Two Wins!");
+                        this.getState().setActivePlayer(Player.NONE);
+                }
+
+                else if (this.playerPiecesLeft[2] == 0)
+                {
+                        this.frame.setTitle("Player One Wins!");
+                        this.getState().setActivePlayer(Player.NONE);
+                }
+
         }
 
 
