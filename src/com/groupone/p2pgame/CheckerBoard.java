@@ -893,12 +893,29 @@ public class CheckerBoard extends JPanel implements MouseListener
 
                 if( this.isGameOver )
                 {
+                                // will close both checkerboards
                         this.frame.dispose();
 
+
+                        String endText;
+
+                                // ensures that the ending screen will only be opened once
                         if(this.boardOwner == Player.ONE)
                         {
+
+                                if(this.playerPiecesLeft[1] == 0)
+                                {
+                                        endText = "Player Two Wins!";
+                                }
+                                else
+                                {
+                                        endText = "Player One Wins!";
+                                }
+
                                 this.gameDriver.getFrame().dispose();
-                                this.gameDriver.gameEndingScreen();
+                                this.gameDriver.gameEndingScreen(endText);
+
+
                         }
                 }
 

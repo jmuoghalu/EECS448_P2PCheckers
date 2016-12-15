@@ -20,8 +20,10 @@ public class GameDriver extends JPanel
 
         private JPanel beginningLabelsPanel;
         private JPanel beginningButtonsPanel;
+
         private JButton beginningFirstConnectButton;
         private JButton beginningSecondConnectButton;
+        private JButton runTestSuite;
 
 
         private JPanel endMainPanel;
@@ -71,7 +73,7 @@ public class GameDriver extends JPanel
         {
 
                 this.frame = new JFrame("Checkers");
-                frame.setSize(700,450);
+                frame.setSize(700,550);
 
                 this.beginningLabelsPanel = new JPanel();
                 beginningLabelsPanel.setLayout( new GridLayout(2,1) );
@@ -88,10 +90,20 @@ public class GameDriver extends JPanel
                 beginningSecondConnectButton.addActionListener(gameBeginningButtonListener());
 
 
+                this.runTestSuite = new JButton("Run Tests");
+                runTestSuite.setPreferredSize( new Dimension(300, 100) );
+                runTestSuite.addActionListener(testSuiteButtonListener());
+
 
                 beginningButtonsPanel.add(beginningFirstConnectButton);
                 beginningButtonsPanel.add( new JPanel() ); // empty space
                 beginningButtonsPanel.add(beginningSecondConnectButton);
+                beginningButtonsPanel.add( new JPanel() ); // empty space
+                beginningButtonsPanel.add(runTestSuite);
+                beginningButtonsPanel.add( new JPanel() ); // empty space
+
+
+
 
                 JLabel mainLabel = new JLabel("Welcome to Checkers!", SwingConstants.CENTER);
                 mainLabel.setFont( new Font("Serif", Font.PLAIN, 50) );
@@ -101,6 +113,11 @@ public class GameDriver extends JPanel
 
                 beginningLabelsPanel.add(mainLabel);
                 beginningLabelsPanel.add(instruction);
+
+
+
+
+
 
 
 		JPanel serverInfo = new JPanel(new GridLayout(2, 2));
@@ -117,11 +134,13 @@ public class GameDriver extends JPanel
 		serverInfo.add(portLabel);
 		this.portField = new JTextField(6);
 		this.portField.setText("10200");
-		serverInfo.add(this.portField);
-		frame.add(serverInfo, BorderLayout.SOUTH);
+                serverInfo.add(this.portField);
 
+
+                        // adding the panels to the JFrame
                 frame.add(beginningLabelsPanel, BorderLayout.NORTH);
                 frame.add(beginningButtonsPanel, BorderLayout.CENTER);
+                frame.add(serverInfo, BorderLayout.SOUTH);
 
 
                 frame.setVisible(true);
@@ -131,11 +150,11 @@ public class GameDriver extends JPanel
         }
 
 
-        public void gameEndingScreen()
+        public void gameEndingScreen(String endText)
         {
 
                 this.frame = new JFrame("Checkers");
-                frame.setSize(700,300);
+                frame.setSize(700,400);
 
 
                 this.endMainPanel = new JPanel();
@@ -160,7 +179,7 @@ public class GameDriver extends JPanel
                 endMainPanel.add( new JPanel() ); // empty space
                 endMainPanel.add(endExitButton);
 
-                JLabel mainLabel = new JLabel("Game Over!", SwingConstants.CENTER);
+                JLabel mainLabel = new JLabel(endText, SwingConstants.CENTER);
                 mainLabel.setFont( new Font("Serif", Font.PLAIN, 60) );
 
                 frame.add(mainLabel, BorderLayout.NORTH);
@@ -174,32 +193,6 @@ public class GameDriver extends JPanel
 
         }
 
-
-/*
-
-        /**
-                GameDriver will freeze while the two-player game is running, and will
-
-        private void gameRunning()
-        {
-
-                while( !this.firstGame.checkGameOver() )
-                {
-                        try
-                        {
-                                Thread.sleep(5); //checks the game if the game is over every five seconds
-                        }
-                        catch(Exception exc)
-                        {
-
-                        }
-
-                }
-                this.gameEndingScreen();
-
-
-        }
-*/
 
 
 
@@ -215,9 +208,11 @@ public class GameDriver extends JPanel
                         public void actionPerformed(ActionEvent event)
                         {
 
-                                if(false /*CHANGE THIS FOR THE TESTING BUTTON*/)
+                                if( event.getSource() == self.runTestSuite )
                                 {
 
+                                        CheckerBoardStateTest tester = new CheckerBoardStateTest();
+                                        tester.runTests();
 
                                 }
 
@@ -292,6 +287,29 @@ public class GameDriver extends JPanel
 
 
 
+        private ActionListener testSuiteButtonListener()
+        {
+
+                GameDriver self = this;
+                ActionListener listener = new ActionListener()
+                {
+
+                        public void actionPerformed(ActionEvent event)
+                        {
+                                CheckerBoardStateTest tester = new CheckerBoardStateTest();
+                                tester.runTests();
+                        }
+
+                };
+
+                return listener;
+
+        }
+
+
+
+
+
 
 
                 // return to GameBeginning screen
@@ -310,13 +328,18 @@ public class GameDriver extends JPanel
                                 if( event.getSource() == self.endRestartButton )
                                 {
                                         self.frame.dispose();
+
+                                                // resets the text for the beginning screen's buttons
+                                        self.connectMessageOne = "";
+                                        self.beginningFirstConnectButton.setText("Connect");
+                                        self.beginningSecondConnectButton.setText("Connect");
+
+                                                // opens the JFrame for the beginning screen
                                         self.gameBeginningScreen();
                                 }
 
                                 else // the button pressed was the exit button
                                 {
-                                        //self.firstGame.getClient().close();
-                                        //self.secondGame.getClient().close();
                                         self.frame.dispose();
                                 }
 

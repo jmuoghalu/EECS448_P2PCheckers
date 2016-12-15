@@ -1,8 +1,9 @@
-import com.groupone.p2pgame.*;
+package com.groupone.p2pgame;
 import java.util.Arrays;
 
 
-public class CheckerBoardStateTest {
+public class CheckerBoardStateTest
+{
 
 
 
@@ -358,8 +359,10 @@ public class CheckerBoardStateTest {
         }
 
 
-    public static void main(String args[]) {
-        System.out.println("starting tests...");
+    public void runTests()
+
+    {
+        System.out.println("\n\n\nStarting Tests...");
         if (test1()) {
             System.out.println("test 1: New board is empty.. succeeded");
         } else {
@@ -446,6 +449,6 @@ public class CheckerBoardStateTest {
         } else {
             System.out.println("test 16: isValidmove method checks if the move is valid.. failed");
         }
-        
+
     }
 }
