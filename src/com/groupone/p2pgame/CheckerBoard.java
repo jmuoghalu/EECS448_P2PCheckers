@@ -77,7 +77,7 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
         private String frameTitle;
-        private String playerColor;
+        private String playerColor; // for clarification of the title display
 
 
         private boolean isGameOver;
@@ -861,7 +861,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                         this.frame.setTitle("Opponent's Turn (Your Pieces Left: " + this.playerPiecesLeft[this.boardOwner.ordinal()] + ")");
                 }
 
-                else
+                else // the game is over
                 {
 
                         if( this.playerPiecesLeft[ this.boardOwner.ordinal() ] == 0 )
@@ -886,7 +886,7 @@ public class CheckerBoard extends JPanel implements MouseListener
 
 
         /**
-           Check if one player has won.
+           Check if one player has won, and close the game windows if so.
         */
         public void endGame()
         {
@@ -913,7 +913,7 @@ public class CheckerBoard extends JPanel implements MouseListener
                                 }
 
                                 this.gameDriver.getFrame().dispose();
-                                this.gameDriver.gameEndingScreen(endText);
+                                this.gameDriver.gameEndingScreen(endText); //returns control back to the GameDriver
 
 
                         }

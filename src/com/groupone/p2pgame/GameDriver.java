@@ -21,6 +21,7 @@ public class GameDriver extends JPanel
         private JPanel beginningLabelsPanel;
         private JPanel beginningButtonsPanel;
 
+
         private JButton beginningFirstConnectButton;
         private JButton beginningSecondConnectButton;
         private JButton runTestSuite;
@@ -44,6 +45,9 @@ public class GameDriver extends JPanel
         private String connectMessageTwo;
 
 
+        /**
+                initializes the GameDriver member variables
+        */
         public GameDriver()
         {
                 this.frame = new JFrame();
@@ -68,7 +72,9 @@ public class GameDriver extends JPanel
         }
 
 
-
+        /**
+                Displays a starting for the users, with two buttons for connecting two players and a button for running tests
+        */
         public void gameBeginningScreen()
         {
 
@@ -81,6 +87,7 @@ public class GameDriver extends JPanel
                 this.beginningButtonsPanel = new JPanel();
 
 
+                        // player connection buttons
                 this.beginningFirstConnectButton = new JButton("Connect");
                 beginningFirstConnectButton.setPreferredSize( new Dimension(250,200) );
                 beginningFirstConnectButton.addActionListener(gameBeginningButtonListener());
@@ -90,11 +97,13 @@ public class GameDriver extends JPanel
                 beginningSecondConnectButton.addActionListener(gameBeginningButtonListener());
 
 
+                        // test suite option
                 this.runTestSuite = new JButton("Run Tests");
                 runTestSuite.setPreferredSize( new Dimension(300, 100) );
                 runTestSuite.addActionListener(testSuiteButtonListener());
 
 
+                        // organizes the three buttons within a JPanel
                 beginningButtonsPanel.add(beginningFirstConnectButton);
                 beginningButtonsPanel.add( new JPanel() ); // empty space
                 beginningButtonsPanel.add(beginningSecondConnectButton);
@@ -104,7 +113,7 @@ public class GameDriver extends JPanel
 
 
 
-
+                        // main title of screen
                 JLabel mainLabel = new JLabel("Welcome to Checkers!", SwingConstants.CENTER);
                 mainLabel.setFont( new Font("Serif", Font.PLAIN, 50) );
 
@@ -119,7 +128,7 @@ public class GameDriver extends JPanel
 
 
 
-
+                        // server information that is used in connecting clients
 		JPanel serverInfo = new JPanel(new GridLayout(2, 2));
 		JLabel addressLabel = new JLabel("Address");
 		serverInfo.add(addressLabel);
@@ -150,6 +159,11 @@ public class GameDriver extends JPanel
         }
 
 
+
+
+        /**
+                Handles the display of the game over screen, which prints the game results and allows the player to leave the program or begin a new game
+        */
         public void gameEndingScreen(String endText)
         {
 
@@ -159,7 +173,7 @@ public class GameDriver extends JPanel
 
                 this.endMainPanel = new JPanel();
 
-
+                        // for restarting
                 this.endRestartButton = new JButton();
                 this.endRestartButton.setText("Restart");
                 endRestartButton.setPreferredSize( new Dimension(180, 180) );
@@ -167,6 +181,7 @@ public class GameDriver extends JPanel
                 endRestartButton.addActionListener(gameEndButtonListener());
 
 
+                        // for leaving the program
                 this.endExitButton = new JButton();
                 this.endExitButton.setText("Exit");
                 endExitButton.setPreferredSize( new Dimension(180, 180) );
@@ -195,7 +210,10 @@ public class GameDriver extends JPanel
 
 
 
-
+        /**
+                This ButtonListener will handle the two clients' initial connections to the server and will open game instances.
+                The testing suite's button also uses this for the test files.
+        */
         private ActionListener gameBeginningButtonListener()
         {
 
@@ -208,72 +226,64 @@ public class GameDriver extends JPanel
                         public void actionPerformed(ActionEvent event)
                         {
 
-                                if( event.getSource() == self.runTestSuite )
+                                try
                                 {
 
-                                        CheckerBoardStateTest tester = new CheckerBoardStateTest();
-                                        tester.runTests();
+					String address = self.addressField.getText();
+				        String port = self.portField.getText();
+
+                                        Client client = new Client(address, Integer.parseInt(port));
+                                        CheckerBoard checkersGame = checkersGame = new CheckerBoard(client, self);
+
+
+                                                // The strings defined below will inform the user of how the connection is coming along.
+                                        if( self.connectMessageOne == "")
+                                        {
+                                                self.connectMessageOne = "Player One Connected";
+                                                self.connectMessageTwo = "Connect As Player Two";
+                                        }
+                                        else if( connectMessageOne == "Player One Connected") // otherwise, it was player two's button that was pressed
+                                        {
+                                                self.connectMessageOne = "Player Two Connected";
+                                                self.connectMessageTwo = "Player One Connected";
+                                        }
+
+
+                                                // sets the two created Checkers games as member variables for the GameDriver
+                                        if( self.firstGame == null)
+                                        {
+                                                self.firstGame = checkersGame;
+                                        }
+                                        else
+                                        {
+                                                self.secondGame = checkersGame;
+                                        }
+
+
+
+
+                                                // changes the text on the screen buttons to give the user a hint as to what is going on
+                                        if( event.getSource() == self.beginningFirstConnectButton )
+                                        {
+                                                self.beginningFirstConnectButton.setText(self.connectMessageOne);
+                                                self.beginningSecondConnectButton.setText(self.connectMessageTwo);
+                                                self.beginningFirstConnectButton.setEnabled(false);
+                                        }
+                                        else // the "Connect Player Two" button was clicked
+                                        {
+                                                self.beginningSecondConnectButton.setText(self.connectMessageOne);
+                                                self.beginningFirstConnectButton.setText(self.connectMessageTwo);
+                                                self.beginningSecondConnectButton.setEnabled(false);
+                                        }
+
+
 
                                 }
-
-                                else
+                                catch (Exception e)
                                 {
-
-                                        try
-                                        {
-
-        					String address = self.addressField.getText();
-        				        String port = self.portField.getText();
-
-                                                Client client = new Client(address, Integer.parseInt(port));
-                                                CheckerBoard checkersGame = checkersGame = new CheckerBoard(client, self);
-
-
-                                                if( self.connectMessageOne == "")
-                                                {
-                                                        self.connectMessageOne = "Player One Connected";
-                                                        self.connectMessageTwo = "Connect As Player Two";
-                                                }
-                                                else if( connectMessageOne == "Player One Connected") // otherwise, it was player two's button that was pressed
-                                                {
-                                                        self.connectMessageOne = "Player Two Connected";
-                                                        self.connectMessageTwo = "Player One Connected";
-                                                }
-
-
-                                                if( self.firstGame == null)
-                                                {
-                                                        self.firstGame = checkersGame;
-                                                }
-                                                else
-                                                {
-                                                        self.secondGame = checkersGame;
-                                                }
-
-
-                                                        // changes the text on the screen buttons to give the user a hint as to what is going on
-                                                if( event.getSource() == self.beginningFirstConnectButton )
-                                                {
-                                                        self.beginningFirstConnectButton.setText(self.connectMessageOne);
-                                                        self.beginningSecondConnectButton.setText(self.connectMessageTwo);
-                                                        self.beginningFirstConnectButton.setEnabled(false);
-                                                }
-                                                else // the "Connect Player Two" button was clicked
-                                                {
-                                                        self.beginningSecondConnectButton.setText(self.connectMessageOne);
-                                                        self.beginningFirstConnectButton.setText(self.connectMessageTwo);
-                                                        self.beginningSecondConnectButton.setEnabled(false);
-                                                }
-
-
-
-                                        }
-                                        catch (Exception e)
-                                        {
-                                                System.out.println("Fatal error: " + e);
-                                        }
-
+                                        System.out.println("Fatal error: " + e);
                                 }
+
 
                         }
 
@@ -287,6 +297,9 @@ public class GameDriver extends JPanel
 
 
 
+        /**
+                ButtonListener used exclusively for running the testing suite and printing to terminal.
+        */
         private ActionListener testSuiteButtonListener()
         {
 
@@ -312,7 +325,9 @@ public class GameDriver extends JPanel
 
 
 
-                // return to GameBeginning screen
+        /**
+                ButtonListener used for the game's ending screen
+        */
         private ActionListener gameEndButtonListener()
         {
 
@@ -340,7 +355,7 @@ public class GameDriver extends JPanel
 
                                 else // the button pressed was the exit button
                                 {
-                                        self.frame.dispose();
+                                        self.frame.dispose(); //closes the original JFrame
                                 }
 
                         }
@@ -390,6 +405,7 @@ public class GameDriver extends JPanel
                         GameDriver mainGame = new GameDriver();
 
                         mainGame.gameBeginningScreen();
+                                // The program will begin by displaying the start screen.
 
 
 
